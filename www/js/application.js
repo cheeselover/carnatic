@@ -1,11 +1,12 @@
 angular.module("starter", ["ionic", "starter.controllers", "starter.services"]).run(function($ionicPlatform) {
   return $ionicPlatform.ready(function() {
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    var _ref, _ref1, _ref2;
+    if ((_ref = window.cordova) != null) {
+      if ((_ref1 = _ref.plugins.Keyboard) != null) {
+        _ref1.hideKeyboardAccessoryBar();
+      }
     }
-    if (window.StatusBar) {
-      return StatusBar.styleDefault();
-    }
+    return (_ref2 = window.StatusBar) != null ? _ref2.styleDefault() : void 0;
   });
 }).config(function($stateProvider, $urlRouterProvider) {
   $stateProvider.state("tab", {
@@ -59,7 +60,7 @@ angular.module("starter.services", []).factory("Friends", function() {
   friends = [
     {
       id: 0,
-      name: "Scruff McGruff"
+      name: "This is awesome"
     }, {
       id: 1,
       name: "G.I. Joe"

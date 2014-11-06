@@ -3,7 +3,7 @@ angular.module("starter.services", []).factory "Friends", ->
   friends = [
     {
       id: 0
-      name: "Scruff McGruff"
+      name: "This is awesome"
     }
     {
       id: 1
