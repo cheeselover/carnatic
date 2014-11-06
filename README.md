@@ -20,4 +20,7 @@ Coffeescript files in www/coffee will be compiled to JS and concated into www/js
 Changes to any files in the project directory will trigger a reload in your browser, complete with your newly concated+compiled sass+coffee files!
 
 
+Siva Mahadevan
+---
 
+This fork was made by Siva Mahadevan for the carnatic app.
