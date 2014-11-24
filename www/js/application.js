@@ -49,7 +49,13 @@ angular.module("starter", ["ionic", "starter.controllers", "starter.services"]).
   return $urlRouterProvider.otherwise("/tab/dash");
 });
 
-angular.module("starter.controllers", []).controller("DashCtrl", function($scope) {}).controller("FriendsCtrl", function($scope, Friends) {
+angular.module("starter.controllers", []).controller("DashCtrl", function($scope) {
+  var myFirebase;
+  myFirebase = new Firebase('https://blazing-fire-7995.firebaseio.com/');
+  return myFirebase.push({
+    just: "testing something out"
+  });
+}).controller("FriendsCtrl", function($scope, Friends) {
   return $scope.friends = Friends.all();
 }).controller("FriendDetailCtrl", function($scope, $stateParams, Friends) {
   return $scope.friend = Friends.get($stateParams.friendId);

@@ -1,7 +1,8 @@
 angular.module("starter.controllers", [])
 
 .controller("DashCtrl", ($scope) ->
-
+  myFirebase = new Firebase('https://blazing-fire-7995.firebaseio.com/')
+  myFirebase.push {just: "testing something out"}
 )
 
 .controller("FriendsCtrl", ($scope, Friends) ->
