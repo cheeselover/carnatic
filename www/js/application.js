@@ -53,7 +53,11 @@ angular.module("starter.controllers", []).controller("DashCtrl", function($scope
   return $scope.friends = Friends.all();
 }).controller("FriendDetailCtrl", function($scope, $stateParams, Friends) {
   return $scope.friend = Friends.get($stateParams.friendId);
-}).controller("AccountCtrl", function($scope) {});
+}).controller("AccountCtrl", function($scope) {
+  var test_str;
+  test_str = "thaka thakida thakathimi";
+  return $scope.korvai = test_str.length - test_str.replace(/[aeiou]/g, '').length;
+});
 
 angular.module("starter.services", []).factory("Friends", function() {
   var friends;
