@@ -1,16 +1,16 @@
-angular.module("starter.controllers", [])
+angular.module("carnatic.controllers", [])
 
-.controller("DashCtrl", ($scope) ->
+.controller("ComposeCtrl", ($scope) ->
   myFirebase = new Firebase('https://blazing-fire-7995.firebaseio.com/')
   myFirebase.push {just: "testing something out"}
 )
 
-.controller("FriendsCtrl", ($scope, Friends) ->
-  $scope.friends = Friends.all()
+.controller("KorvaisCtrl", ($scope, Korvais) ->
+  $scope.korvais = Korvais.all()
 )
 
-.controller("FriendDetailCtrl", ($scope, $stateParams, Friends) ->
-  $scope.friend = Friends.get($stateParams.friendId)
+.controller("KorvaiDetailCtrl", ($scope, $stateParams, Korvais) ->
+  $scope.korvai = Korvais.get($stateParams.korvaiId)
 )
 
 .controller("AccountCtrl", ($scope) ->

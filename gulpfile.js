@@ -11,7 +11,6 @@ var coffee = require('gulp-coffee');
 var paths = {
   sass: ['./www/**/*.scss'],
   coffee: ['./www/**/*.coffee']
-
 };
 
 gulp.task('default', ['sass']);

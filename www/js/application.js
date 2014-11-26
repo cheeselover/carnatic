@@ -1,4 +1,4 @@
-angular.module("starter", ["ionic", "starter.controllers", "starter.services"]).run(function($ionicPlatform) {
+angular.module("carnatic", ["ionic", "firebase", "carnatic.controllers", "carnatic.services"]).run(function($ionicPlatform) {
   return $ionicPlatform.ready(function() {
     var _ref, _ref1, _ref2;
     if ((_ref = window.cordova) != null) {
@@ -13,28 +13,28 @@ angular.module("starter", ["ionic", "starter.controllers", "starter.services"]).
     url: "/tab",
     abstract: true,
     templateUrl: "templates/tabs.html"
-  }).state("tab.dash", {
-    url: "/dash",
+  }).state("tab.compose", {
+    url: "/compose",
     views: {
-      "tab-dash": {
-        templateUrl: "templates/tab-dash.html",
-        controller: "DashCtrl"
+      "tab-compose": {
+        templateUrl: "templates/tab-compose.html",
+        controller: "ComposeCtrl"
       }
     }
-  }).state("tab.friends", {
-    url: "/friends",
+  }).state("tab.korvais", {
+    url: "/korvais",
     views: {
-      "tab-friends": {
-        templateUrl: "templates/tab-friends.html",
-        controller: "FriendsCtrl"
+      "tab-korvais": {
+        templateUrl: "templates/tab-korvais.html",
+        controller: "KorvaisCtrl"
       }
     }
-  }).state("tab.friend-detail", {
-    url: "/friend/:friendId",
+  }).state("tab.korvai-detail", {
+    url: "/korvais/:korvaiId",
     views: {
-      "tab-friends": {
-        templateUrl: "templates/friend-detail.html",
-        controller: "FriendDetailCtrl"
+      "tab-korvais": {
+        templateUrl: "templates/korvai-detail.html",
+        controller: "KorvaiDetailCtrl"
       }
     }
   }).state("tab.account", {
@@ -46,28 +46,28 @@ angular.module("starter", ["ionic", "starter.controllers", "starter.services"]).
       }
     }
   });
-  return $urlRouterProvider.otherwise("/tab/dash");
+  return $urlRouterProvider.otherwise("/tab/compose");
 });
 
-angular.module("starter.controllers", []).controller("DashCtrl", function($scope) {
+angular.module("carnatic.controllers", []).controller("ComposeCtrl", function($scope) {
   var myFirebase;
   myFirebase = new Firebase('https://blazing-fire-7995.firebaseio.com/');
   return myFirebase.push({
     just: "testing something out"
   });
-}).controller("FriendsCtrl", function($scope, Friends) {
-  return $scope.friends = Friends.all();
-}).controller("FriendDetailCtrl", function($scope, $stateParams, Friends) {
-  return $scope.friend = Friends.get($stateParams.friendId);
+}).controller("KorvaisCtrl", function($scope, Korvais) {
+  return $scope.korvais = Korvais.all();
+}).controller("KorvaiDetailCtrl", function($scope, $stateParams, Korvais) {
+  return $scope.korvai = Korvais.get($stateParams.korvaiId);
 }).controller("AccountCtrl", function($scope) {
   var test_str;
   test_str = "thaka thakida thakathimi";
   return $scope.korvai = test_str.length - test_str.replace(/[aeiou]/g, '').length;
 });
 
-angular.module("starter.services", []).factory("Friends", function() {
-  var friends;
-  friends = [
+angular.module("carnatic.services", []).factory("Korvais", function() {
+  var korvais;
+  korvais = [
     {
       id: 0,
       name: "This is awesome"
@@ -84,10 +84,10 @@ angular.module("starter.services", []).factory("Friends", function() {
   ];
   return {
     all: function() {
-      return friends;
+      return korvais;
     },
-    get: function(friendId) {
-      return friends[friendId];
+    get: function(korvaiId) {
+      return korvais[korvaiId];
     }
   };
 });
