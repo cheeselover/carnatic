@@ -18,7 +18,6 @@ gulp.task('default', ['sass', 'coffee', 'watch']);
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
     .pipe(sass())
-    .pipe(gulp.dest('./www/css/'))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
@@ -30,7 +29,7 @@ gulp.task('sass', function(done) {
 gulp.task('coffee', function(done) {
   gulp.src(paths.coffee)
     .pipe(coffee({bare: true}).on('error', gutil.log))
-    .pipe(concat('app.js'))
+    .pipe(concat('application.js'))
     .pipe(gulp.dest('./www/js'))
     .on('end', done)
 });

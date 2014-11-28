@@ -1,4 +1,8 @@
-angular.module('carnatic', ['ionic', 'firebase'])
+angular.module('carnatic', [
+  'ionic'
+  'firebase'
+  'carnatic.controllers'
+])
 
 .run ($ionicPlatform) ->
   $ionicPlatform.ready ->
@@ -14,4 +18,9 @@ angular.module('carnatic', ['ionic', 'firebase'])
   $stateProvider.state('login', {
     url: '/'
     templateUrl: 'templates/login.html'
+    controller: 'LoginCtrl'
+  }).state('register', {
+    url: '/register'
+    templateUrl: 'templates/register.html'
+    controller: 'RegisterCtrl'
   })

@@ -1,0 +1,22 @@
+<ion-view title="Register New Account">
+  <ion-content padding="true" scroll="false">
+    <form ng-submit="register(data)">
+      <label class="item item-input">
+        <input type="text" placeholder="Full Name" autocomplete="on" ng-model="data.name">
+      </label>
+      <label class="item item-input">
+        <input type="email" placeholder="Email" autocomplete="on" ng-model="data.email">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="Username" autocomplete="on" ng-model="data.username">
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Password" autocomplete="on" ng-model="data.password">
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Confirm Password" autocomplete="on" ng-model="data.password_confirm">
+      </label>
+      <button class="button button-block button-energized" type="submit">Register</button>
+    </form><br>
+  </ion-content>
+</ion-view>

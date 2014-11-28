@@ -1,12 +1,16 @@
 <ion-view title="Login">
-  <ion-content padding="true">
-    <label class="item item-input">
-      <span class="input-label">Username</span>
-      <input type="text">
-    </label>
-    <label class="item item-input">
-      <span class="input-label">Password</span>
-      <input type="password">
-    </label>
+  <ion-content padding="true" scroll="false">
+    <form ng-submit="login(data)">
+      <label class="item item-input">
+        <input type="text" placeholder="Username" ng-model="data.username">
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Password" ng-model="data.password">
+      </label>
+      <button class="button button-block button-balanced" type="submit">Login</button>
+    </form><br>
+
+    <button class="button button-positive">Login with Facebook</button><br><br>
+    <a href="/#/register">Don't have an account?</a>
   </ion-content>
 </ion-view>
