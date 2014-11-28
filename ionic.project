@@ -1,6 +1,13 @@
 {
-  "name": "Carnatic App",
-  "email": "siva.mahadevan1@gmail.com",
+  "name": "carnatic",
   "app_id": "",
-  "package_name": ""
+  "gulpStartupTasks": [
+    "sass",
+    "coffee",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
 }
