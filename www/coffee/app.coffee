@@ -2,6 +2,7 @@ angular.module('carnatic', [
   'ionic'
   'firebase'
   'carnatic.controllers'
+  'carnatic.factories'
 ])
 
 .run ($ionicPlatform) ->

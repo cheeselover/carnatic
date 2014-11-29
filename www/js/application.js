@@ -1,4 +1,4 @@
-angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers']).run(function($ionicPlatform) {
+angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnatic.factories']).run(function($ionicPlatform) {
   return $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -20,11 +20,28 @@ angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers']).run(fu
   });
 });
 
-angular.module('carnatic.controllers', []).controller("LoginCtrl", function($scope) {
-  return $scope.login = function(data) {
-    return "placeholder";
-  };
-}).controller("RegisterCtrl", function($scope) {
+angular.module('carnatic.controllers', []).controller("LoginCtrl", [
+  '$scope', 'Auth', function($scope, Auth) {
+    $scope.auth = Auth;
+    $scope.user = $scope.auth.$getAuth();
+    $scope.login = function(data) {
+      return Auth.$authWithPassword({
+        email: data.email,
+        password: data.password
+      }, {
+        remember: "sessionOnly"
+      }).then(function(authData) {
+        return location.reload();
+      })["catch"](function(error) {
+        return alert("Authentication failed: " + error);
+      });
+    };
+    return $scope.logout = function() {
+      $scope.auth.$unauth();
+      return location.reload();
+    };
+  }
+]).controller("RegisterCtrl", function($scope) {
   var ref;
   ref = new Firebase('https://carnatic.firebaseio.com');
   return $scope.register = function(data) {
@@ -45,7 +62,7 @@ angular.module('carnatic.controllers', []).controller("LoginCtrl", function($sco
               return alert("Error creating user: " + error);
           }
         } else {
-          alert("Success!");
+          alert("User creation success!");
           return ref.child("users").child(data.username).set({
             username: data.username,
             name: data.name,
@@ -58,3 +75,9 @@ angular.module('carnatic.controllers', []).controller("LoginCtrl", function($sco
     }
   };
 });
+
+angular.module('carnatic.factories', []).factory("Auth", [
+  "$firebaseAuth", function($firebaseAuth) {
+    return $firebaseAuth(new Firebase('https://carnatic.firebaseio.com'));
+  }
+]);

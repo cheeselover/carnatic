@@ -1,8 +1,21 @@
 angular.module('carnatic.controllers', [])
 
-.controller "LoginCtrl", ($scope) ->
+.controller "LoginCtrl", ['$scope', 'Auth', ($scope, Auth) ->
+  $scope.auth = Auth
+  $scope.user = $scope.auth.$getAuth()
   $scope.login = (data) ->
-    "placeholder"
+    Auth.$authWithPassword({
+      email: data.email
+      password: data.password
+    }, { remember: "sessionOnly" })
+    .then (authData) ->
+      location.reload()
+    .catch (error) ->
+      alert "Authentication failed: #{error}"
+  $scope.logout = ->
+    $scope.auth.$unauth()
+    location.reload()
+]
 
 .controller "RegisterCtrl", ($scope) ->
   ref = new Firebase 'https://carnatic.firebaseio.com'
@@ -24,7 +37,7 @@ angular.module('carnatic.controllers', [])
             else
               alert "Error creating user: #{error}"
         else
-          alert "Success!"
+          alert "User creation success!"
           ref.child("users").child(data.username).set
             username: data.username
             name: data.name
