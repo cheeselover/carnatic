@@ -8,19 +8,63 @@ angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnat
     }
   });
 }).config(function($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/tab/compose');
   return $stateProvider.state('login', {
-    url: '/',
+    url: '/login',
     templateUrl: 'templates/login.html',
     controller: 'LoginCtrl'
   }).state('register', {
     url: '/register',
     templateUrl: 'templates/register.html',
     controller: 'RegisterCtrl'
+  }).state('tab', {
+    url: '/tab',
+    abstract: true,
+    templateUrl: 'templates/tabs/tabs.html'
+  }).state('tab.compose', {
+    url: '/compose',
+    views: {
+      'tab-compose': {
+        templateUrl: 'templates/tabs/compose.html',
+        controller: 'ComposeCtrl'
+      }
+    }
+  }).state('tab.korvais', {
+    url: '/korvais',
+    views: {
+      'tab-korvais': {
+        templateUrl: 'templates/tabs/korvais.html',
+        controller: 'KorvaisCtrl'
+      }
+    }
+  }).state('tab.account', {
+    url: '/account',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/tabs/account.html',
+        controller: 'AccountCtrl'
+      }
+    }
   });
 });
 
-angular.module('carnatic.controllers', []).controller("LoginCtrl", [
+angular.module('carnatic.controllers', []);
+
+angular.module('carnatic.factories', []);
+
+angular.module('carnatic.controllers').controller("AccountCtrl", function($scope) {
+  return "placeholder";
+});
+
+angular.module('carnatic.controllers').controller("ComposeCtrl", function($scope) {
+  return "placeholder";
+});
+
+angular.module('carnatic.controllers').controller("KorvaisCtrl", function($scope) {
+  return "placeholder";
+});
+
+angular.module('carnatic.controllers').controller("LoginCtrl", [
   '$scope', 'Auth', function($scope, Auth) {
     $scope.auth = Auth;
     $scope.user = $scope.auth.$getAuth();
@@ -41,7 +85,9 @@ angular.module('carnatic.controllers', []).controller("LoginCtrl", [
       return location.reload();
     };
   }
-]).controller("RegisterCtrl", function($scope) {
+]);
+
+angular.module('carnatic.controllers').controller("RegisterCtrl", function($scope) {
   var ref;
   ref = new Firebase('https://carnatic.firebaseio.com');
   return $scope.register = function(data) {
@@ -76,7 +122,7 @@ angular.module('carnatic.controllers', []).controller("LoginCtrl", [
   };
 });
 
-angular.module('carnatic.factories', []).factory("Auth", [
+angular.module('carnatic.factories').factory("Auth", [
   "$firebaseAuth", function($firebaseAuth) {
     return $firebaseAuth(new Firebase('https://carnatic.firebaseio.com'));
   }
