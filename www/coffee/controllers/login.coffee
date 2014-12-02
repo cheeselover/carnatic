@@ -18,4 +18,3 @@ angular.module('carnatic.controllers')
     $scope.auth.$unauth()
     location.reload()
 ]
-

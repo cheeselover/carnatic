@@ -1,52 +1,65 @@
-angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnatic.factories']).run(function($ionicPlatform) {
-  return $ionicPlatform.ready(function() {
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if (window.StatusBar) {
-      return StatusBar.styleDefault();
-    }
-  });
-}).config(function($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/tab/compose');
-  return $stateProvider.state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'LoginCtrl'
-  }).state('register', {
-    url: '/register',
-    templateUrl: 'templates/register.html',
-    controller: 'RegisterCtrl'
-  }).state('tab', {
-    url: '/tab',
-    abstract: true,
-    templateUrl: 'templates/tabs/tabs.html'
-  }).state('tab.compose', {
-    url: '/compose',
-    views: {
-      'tab-compose': {
-        templateUrl: 'templates/tabs/compose.html',
-        controller: 'ComposeCtrl'
+angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnatic.factories']).run([
+  '$ionicPlatform', '$rootScope', '$state', 'Auth', function($ionicPlatform, $rootScope, $state, Auth) {
+    $ionicPlatform.ready(function() {
+      if (window.cordova && window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       }
-    }
-  }).state('tab.korvais', {
-    url: '/korvais',
-    views: {
-      'tab-korvais': {
-        templateUrl: 'templates/tabs/korvais.html',
-        controller: 'KorvaisCtrl'
+      if (window.StatusBar) {
+        return StatusBar.styleDefault();
       }
-    }
-  }).state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tabs/account.html',
-        controller: 'AccountCtrl'
+    });
+    return $rootScope.$on('$stateChangeStart', function(event, toState) {
+      if (toState.name.substring(0, 3) === 'tab') {
+        return Auth.$waitForAuth().then(function(user) {
+          if (user == null) {
+            return $state.go('login');
+          }
+        });
       }
-    }
-  });
-});
+    });
+  }
+]).config([
+  '$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/tab/compose');
+    return $stateProvider.state('login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'LoginCtrl'
+    }).state('register', {
+      url: '/register',
+      templateUrl: 'templates/register.html',
+      controller: 'RegisterCtrl'
+    }).state('tab', {
+      url: '/tab',
+      abstract: true,
+      templateUrl: 'templates/tabs/tabs.html'
+    }).state('tab.compose', {
+      url: '/compose',
+      views: {
+        'tab-compose': {
+          templateUrl: 'templates/tabs/compose.html',
+          controller: 'ComposeCtrl'
+        }
+      }
+    }).state('tab.korvais', {
+      url: '/korvais',
+      views: {
+        'tab-korvais': {
+          templateUrl: 'templates/tabs/korvais.html',
+          controller: 'KorvaisCtrl'
+        }
+      }
+    }).state('tab.account', {
+      url: '/account',
+      views: {
+        'tab-account': {
+          templateUrl: 'templates/tabs/account.html',
+          controller: 'AccountCtrl'
+        }
+      }
+    });
+  }
+]);
 
 angular.module('carnatic.controllers', []);
 
