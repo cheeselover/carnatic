@@ -81,16 +81,29 @@ angular.module('carnatic.controllers').controller("LoginCtrl", [
   '$scope', 'Auth', function($scope, Auth) {
     $scope.auth = Auth;
     $scope.user = $scope.auth.$getAuth();
-    $scope.login = function(data) {
+    window.w00t = $scope.user;
+    $scope.loginWithEmail = function(data) {
       return Auth.$authWithPassword({
         email: data.email,
         password: data.password
       }, {
         remember: "sessionOnly"
       }).then(function(authData) {
-        return location.reload();
+        console.log(authData);
+        return location.assign("/#/tab/compose");
       })["catch"](function(error) {
         return alert("Authentication failed: " + error);
+      });
+    };
+    $scope.loginWithFacebook = function() {
+      return Auth.$authWithOAuthPopup('facebook', function(error, authData) {
+        if (error != null) {
+          return alert("Authentication failed: " + error);
+        } else {
+          return console.log(authData);
+        }
+      }, {
+        remember: "sessionOnly"
       });
     };
     return $scope.logout = function() {

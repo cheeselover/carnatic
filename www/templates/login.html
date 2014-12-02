@@ -6,7 +6,7 @@
     </div>
 
     <div ng-hide="user">
-      <form ng-submit="login(data)">
+      <form ng-submit="loginWithEmail(data)">
         <label class="item item-input">
           <input type="text" placeholder="Email" ng-model="data.email">
         </label>
@@ -16,7 +16,7 @@
         <button class="button button-block button-balanced" type="submit">Login</button>
       </form><br>
 
-      <button class="button button-positive">Login with Facebook</button><br><br>
+      <button class="button button-positive" ng-click="loginWithFacebook()">Login with Facebook</button><br><br>
       <a href="/#/register">Don't have an account?</a>
     </div>
   </ion-content>
