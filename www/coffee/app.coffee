@@ -15,7 +15,7 @@ angular.module('carnatic', [
 
   $rootScope.$on '$stateChangeStart', (event, toState) ->
     if toState.name.substring(0, 3) is 'tab'
-      Auth.$waitForAuth().then (user) ->
+      Auth.authRef.$waitForAuth().then (user) ->
         if not user?
           $state.go 'login'
 ]

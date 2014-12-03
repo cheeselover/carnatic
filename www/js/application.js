@@ -10,7 +10,7 @@ angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnat
     });
     return $rootScope.$on('$stateChangeStart', function(event, toState) {
       if (toState.name.substring(0, 3) === 'tab') {
-        return Auth.$waitForAuth().then(function(user) {
+        return Auth.authRef.$waitForAuth().then(function(user) {
           if (user == null) {
             return $state.go('login');
           }
@@ -78,36 +78,34 @@ angular.module('carnatic.controllers').controller("KorvaisCtrl", function($scope
 });
 
 angular.module('carnatic.controllers').controller("LoginCtrl", [
-  '$scope', 'Auth', function($scope, Auth) {
+  '$scope', '$state', 'Auth', function($scope, $state, Auth) {
     $scope.auth = Auth;
-    $scope.user = $scope.auth.$getAuth();
-    window.w00t = $scope.user;
+    $scope.user = $scope.auth.currentUser;
     $scope.loginWithEmail = function(data) {
-      return Auth.$authWithPassword({
+      return Auth.loginEmail({
         email: data.email,
         password: data.password
       }, {
         remember: "sessionOnly"
       }).then(function(authData) {
-        console.log(authData);
-        return location.assign("/#/tab/compose");
+        return $state.go('tab.compose');
       })["catch"](function(error) {
         return alert("Authentication failed: " + error);
       });
     };
     $scope.loginWithFacebook = function() {
-      return Auth.$authWithOAuthPopup('facebook', function(error, authData) {
+      return Auth.loginOAuth('facebook', function(error, authData) {
         if (error != null) {
           return alert("Authentication failed: " + error);
         } else {
-          return console.log(authData);
+          return $state.go('tab.compose');
         }
       }, {
         remember: "sessionOnly"
       });
     };
     return $scope.logout = function() {
-      $scope.auth.$unauth();
+      $scope.auth.logout();
       return location.reload();
     };
   }
@@ -150,6 +148,14 @@ angular.module('carnatic.controllers').controller("RegisterCtrl", function($scop
 
 angular.module('carnatic.factories').factory("Auth", [
   "$firebaseAuth", function($firebaseAuth) {
-    return $firebaseAuth(new Firebase('https://carnatic.firebaseio.com'));
+    var authRef;
+    authRef = $firebaseAuth(new Firebase('https://carnatic.firebaseio.com'));
+    return {
+      currentUser: authRef.$getAuth(),
+      logout: authRef.$unauth,
+      loginEmail: authRef.$authWithPassword,
+      loginOAuth: authRef.$authWithOAuthPopup,
+      authRef: authRef
+    };
   }
 ]);

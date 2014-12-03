@@ -1,32 +1,30 @@
 angular.module('carnatic.controllers')
 
-.controller "LoginCtrl", ['$scope', 'Auth', ($scope, Auth) ->
+.controller "LoginCtrl", ['$scope', '$state', 'Auth', ($scope, $state, Auth) ->
   $scope.auth = Auth
-  $scope.user = $scope.auth.$getAuth()
-  window.w00t = $scope.user
+  $scope.user = $scope.auth.currentUser
 
   $scope.loginWithEmail = (data) ->
-    Auth.$authWithPassword({
+    Auth.loginEmail({
       email: data.email
       password: data.password
     }, { remember: "sessionOnly" })
     .then (authData) ->
-      console.log authData
-      location.assign "/#/tab/compose"
+      $state.go 'tab.compose'
     .catch (error) ->
       alert "Authentication failed: #{error}"
 
   $scope.loginWithFacebook = ->
-    Auth.$authWithOAuthPopup('facebook',
+    Auth.loginOAuth('facebook',
     (error, authData) ->
       if error?
         alert "Authentication failed: #{error}"
       else
-        console.log authData
+        $state.go 'tab.compose'
 
     , { remember: "sessionOnly" })
 
   $scope.logout = ->
-    $scope.auth.$unauth()
+    $scope.auth.logout()
     location.reload()
 ]
