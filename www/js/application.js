@@ -79,6 +79,8 @@ angular.module('carnatic.controllers').controller("KorvaisCtrl", function($scope
 
 angular.module('carnatic.controllers').controller("LoginCtrl", [
   '$scope', '$state', 'Auth', function($scope, $state, Auth) {
+    var usersRef;
+    usersRef = new Firebase("https://carnatic.firebaseio.com/users");
     $scope.auth = Auth;
     $scope.user = $scope.auth.currentUser;
     $scope.loginWithEmail = function(data) {
@@ -94,14 +96,12 @@ angular.module('carnatic.controllers').controller("LoginCtrl", [
       });
     };
     $scope.loginWithFacebook = function() {
-      return Auth.loginOAuth('facebook', function(error, authData) {
-        if (error != null) {
-          return alert("Authentication failed: " + error);
-        } else {
-          return $state.go('tab.compose');
-        }
-      }, {
+      return Auth.loginOAuth('facebook', {
         remember: "sessionOnly"
+      }).then(function(authData) {
+        return $state.go('tab.compose');
+      })["catch"](function(error) {
+        return alert("Authentication failed: " + error);
       });
     };
     return $scope.logout = function() {
@@ -111,47 +111,65 @@ angular.module('carnatic.controllers').controller("LoginCtrl", [
   }
 ]);
 
-angular.module('carnatic.controllers').controller("RegisterCtrl", function($scope) {
-  var ref;
-  ref = new Firebase('https://carnatic.firebaseio.com');
-  return $scope.register = function(data) {
-    if (data.password === data.password_confirm) {
-      return ref.createUser({
-        email: data.email,
-        password: data.password
-      }, function(error) {
-        if (error) {
-          switch (error.code) {
-            case "EMAIL_TAKEN":
-              alert("Email already in use.");
-              break;
-            case "INVALID EMAIL":
-              alert("Email not valid");
-              break;
-            default:
-              return alert("Error creating user: " + error);
+angular.module('carnatic.controllers').controller("RegisterCtrl", [
+  '$scope', 'Auth', function($scope, Auth) {
+    return $scope.register = function(data) {
+      if (data.password === data.password_confirm) {
+        return Auth.createUser(data.email, data.password)["catch"](function(error) {
+          if (error) {
+            switch (error.code) {
+              case "EMAIL_TAKEN":
+                alert("Email already in use.");
+                break;
+              case "INVALID EMAIL":
+                alert("Email not valid");
+                break;
+              default:
+                return alert("Error creating user: " + error);
+            }
+          } else {
+            alert("User creation success!");
+            return Auth.loginEmail({
+              email: data.email,
+              password: data.password
+            }, {
+              remember: "sessionOnly"
+            }).then(function(authData) {
+              ref.child("user_profiles").child(authData.uid).set({
+                username: data.username,
+                name: data.name,
+                email: data.email
+              });
+              return $state.go('tab.compose');
+            })["catch"](function(error) {
+              return alert("Authentication failed: " + error);
+            });
           }
-        } else {
-          alert("User creation success!");
-          return ref.child("users").child(data.username).set({
-            username: data.username,
-            name: data.name,
-            email: data.email
-          });
-        }
-      });
-    } else {
-      return alert("Password did not match confirmation.");
-    }
-  };
-});
+        });
+      } else {
+        return alert("Password did not match confirmation.");
+      }
+    };
+  }
+]);
 
 angular.module('carnatic.factories').factory("Auth", [
-  "$firebaseAuth", function($firebaseAuth) {
-    var authRef;
+  '$firebaseAuth', function($firebaseAuth) {
+    var authRef, usersRef;
     authRef = $firebaseAuth(new Firebase('https://carnatic.firebaseio.com'));
+    usersRef = new Firebase("https://carnatic.firebaseio.com/users");
+    authRef.$onAuth(function(authData) {
+      if (authData) {
+        return usersRef.child(authData.uid).once('value', function(snapshot) {
+          if (snapshot.val() == null) {
+            return usersRef.child(authData.uid).set(authData);
+          }
+        });
+      }
+    });
     return {
       currentUser: authRef.$getAuth(),
+      createUser: authRef.$createUser,
       logout: authRef.$unauth,
       loginEmail: authRef.$authWithPassword,
       loginOAuth: authRef.$authWithOAuthPopup,

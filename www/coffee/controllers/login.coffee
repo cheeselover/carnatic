@@ -1,6 +1,7 @@
 angular.module('carnatic.controllers')
 
 .controller "LoginCtrl", ['$scope', '$state', 'Auth', ($scope, $state, Auth) ->
+  usersRef = new Firebase "https://carnatic.firebaseio.com/users"
   $scope.auth = Auth
   $scope.user = $scope.auth.currentUser
 
@@ -9,20 +10,17 @@ angular.module('carnatic.controllers')
       email: data.email
       password: data.password
     }, { remember: "sessionOnly" })
-    .then (authData) ->
-      $state.go 'tab.compose'
-    .catch (error) ->
-      alert "Authentication failed: #{error}"
+      .then (authData) ->
+        $state.go 'tab.compose'
+      .catch (error) ->
+        alert "Authentication failed: #{error}"
 
   $scope.loginWithFacebook = ->
-    Auth.loginOAuth('facebook',
-    (error, authData) ->
-      if error?
-        alert "Authentication failed: #{error}"
-      else
+    Auth.loginOAuth('facebook', { remember: "sessionOnly" })
+      .then (authData) ->
         $state.go 'tab.compose'
-
-    , { remember: "sessionOnly" })
+      .catch (error) ->
+        alert "Authentication failed: #{error}"
 
   $scope.logout = ->
     $scope.auth.logout()
