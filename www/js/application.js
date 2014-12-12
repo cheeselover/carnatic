@@ -112,7 +112,9 @@ angular.module('carnatic.controllers').controller("LoginCtrl", [
 ]);
 
 angular.module('carnatic.controllers').controller("RegisterCtrl", [
-  '$scope', 'Auth', function($scope, Auth) {
+  '$scope', '$state', 'Auth', function($scope, $state, Auth) {
+    var ref;
+    ref = new Firebase("https://carnatic.firebaseio.com/");
     return $scope.register = function(data) {
       if (data.password === data.password_confirm) {
         return Auth.createUser(data.email, data.password)["catch"](function(error) {
@@ -127,24 +129,23 @@ angular.module('carnatic.controllers').controller("RegisterCtrl", [
               default:
                 return alert("Error creating user: " + error);
             }
-          } else {
-            alert("User creation success!");
-            return Auth.loginEmail({
-              email: data.email,
-              password: data.password
-            }, {
-              remember: "sessionOnly"
-            }).then(function(authData) {
-              ref.child("user_profiles").child(authData.uid).set({
-                username: data.username,
-                name: data.name,
-                email: data.email
-              });
-              return $state.go('tab.compose');
-            })["catch"](function(error) {
-              return alert("Authentication failed: " + error);
-            });
           }
+        }).then(function() {
+          return Auth.loginEmail({
+            email: data.email,
+            password: data.password
+          }, {
+            remember: "sessionOnly"
+          }).then(function(authData) {
+            ref.child("user_profiles").child(authData.uid).set({
+              username: data.username,
+              name: data.name,
+              email: data.email
+            });
+            return $state.go('tab.compose');
+          })["catch"](function(error) {
+            return alert("Authentication failed: " + error);
+          });
         });
       } else {
         return alert("Password did not match confirmation.");

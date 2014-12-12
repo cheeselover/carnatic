@@ -1,6 +1,8 @@
 angular.module('carnatic.controllers')
 
-.controller "RegisterCtrl", ['$scope', 'Auth', ($scope, Auth) ->
+.controller "RegisterCtrl", ['$scope', '$state', 'Auth', ($scope, $state, Auth) ->
+
+  ref = new Firebase "https://carnatic.firebaseio.com/"
 
   $scope.register = (data) ->
     if data.password == data.password_confirm
@@ -15,22 +17,20 @@ angular.module('carnatic.controllers')
               break
             else
               alert "Error creating user: #{error}"
-        else
-          alert "User creation success!"
+      .then ->
+        Auth.loginEmail({
+          email: data.email
+          password: data.password
+        }, { remember: "sessionOnly" })
+          .then (authData) ->
+            ref.child("user_profiles").child(authData.uid).set
+              username: data.username
+              name: data.name
+              email: data.email
 
-          Auth.loginEmail({
-            email: data.email
-            password: data.password
-          }, { remember: "sessionOnly" })
-            .then (authData) ->
-              ref.child("user_profiles").child(authData.uid).set
-                username: data.username
-                name: data.name
-                email: data.email
-
-              $state.go 'tab.compose'
-            .catch (error) ->
-              alert "Authentication failed: #{error}"
+            $state.go 'tab.compose'
+          .catch (error) ->
+            alert "Authentication failed: #{error}"
 
     else
       alert "Password did not match confirmation."
