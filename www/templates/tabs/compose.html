@@ -1,5 +1,14 @@
 <ion-view title="Compose">
-  <ion-content class="padding">
-    <h1>Compose</h1>
+  <ion-content class="padding" scroll="false">
+    <form ng-submit="createKorvai(korvai)">
+      <label class="item item-input">
+        <textarea ng-model="korvai.content" ng-change="countMatras(korvai.content)"placeholder="Make your korvai..."></textarea>
+      </label>
+
+      <button class="button button-block button-positive" type="submit">I'm done!</button>
+    </form>
+
+    <h1>Number of matras: {{ matras || 0 }}</h1>
+    <arc-tween val="matras"></arc-tween>
   </ion-content>
 </ion-view>

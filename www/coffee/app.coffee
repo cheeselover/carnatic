@@ -4,6 +4,7 @@ angular.module('carnatic', [
   'carnatic.controllers'
   'carnatic.factories'
   'carnatic.models'
+  'carnatic.directives'
 ])
 
 .run ['$ionicPlatform', '$rootScope', '$state', 'Auth', ($ionicPlatform, $rootScope, $state, Auth) ->
@@ -67,3 +68,4 @@ angular.module('carnatic', [
 angular.module 'carnatic.controllers', []
 angular.module 'carnatic.factories', []
 angular.module 'carnatic.models', []
+angular.module 'carnatic.directives', []

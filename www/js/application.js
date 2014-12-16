@@ -1,4 +1,4 @@
-angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnatic.factories', 'carnatic.models']).run([
+angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnatic.factories', 'carnatic.models', 'carnatic.directives']).run([
   '$ionicPlatform', '$rootScope', '$state', 'Auth', function($ionicPlatform, $rootScope, $state, Auth) {
     $ionicPlatform.ready(function() {
       if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -67,13 +67,25 @@ angular.module('carnatic.factories', []);
 
 angular.module('carnatic.models', []);
 
+angular.module('carnatic.directives', []);
+
 angular.module('carnatic.controllers').controller("AccountCtrl", function($scope) {
   return "placeholder";
 });
 
 angular.module('carnatic.controllers').controller("ComposeCtrl", [
-  '$scope', 'KorvaiList', function($scope, KorvaiList) {
-    return "Placeholder";
+  '$scope', 'Auth', function($scope, Auth) {
+    $scope.createKorvai = function(korvai) {
+      if (korvai.content !== "") {
+        Auth.user.korvais().$add(korvai.content);
+        return korvai.content = "";
+      }
+    };
+    return $scope.countMatras = function(content) {
+      var vowels;
+      vowels = content.match(/[aeiou]/gi);
+      return $scope.matras = vowels ? vowels.length : 0;
+    };
   }
 ]);
 
