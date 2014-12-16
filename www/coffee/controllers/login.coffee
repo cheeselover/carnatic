@@ -1,7 +1,6 @@
 angular.module('carnatic.controllers')
 
 .controller "LoginCtrl", ['$scope', '$state', 'Auth', ($scope, $state, Auth) ->
-  usersRef = new Firebase "https://carnatic.firebaseio.com/users"
   $scope.auth = Auth
   $scope.user = $scope.auth.currentUser
 

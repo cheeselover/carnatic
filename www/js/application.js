@@ -1,4 +1,4 @@
-angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnatic.factories']).run([
+angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnatic.factories', 'carnatic.models']).run([
   '$ionicPlatform', '$rootScope', '$state', 'Auth', function($ionicPlatform, $rootScope, $state, Auth) {
     $ionicPlatform.ready(function() {
       if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -59,28 +59,34 @@ angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnat
       }
     });
   }
-]);
+]).value('REF', new Firebase("https://carnatic.firebaseio.com/"));
 
 angular.module('carnatic.controllers', []);
 
 angular.module('carnatic.factories', []);
 
+angular.module('carnatic.models', []);
+
 angular.module('carnatic.controllers').controller("AccountCtrl", function($scope) {
   return "placeholder";
 });
 
-angular.module('carnatic.controllers').controller("ComposeCtrl", function($scope) {
-  return "placeholder";
-});
+angular.module('carnatic.controllers').controller("ComposeCtrl", [
+  '$scope', 'KorvaiList', function($scope, KorvaiList) {
+    return "Placeholder";
+  }
+]);
 
-angular.module('carnatic.controllers').controller("KorvaisCtrl", function($scope) {
-  return "placeholder";
-});
+angular.module('carnatic.controllers').controller("KorvaisCtrl", [
+  '$scope', 'Auth', function($scope, Auth) {
+    var user;
+    user = Auth.user;
+    return $scope.korvais = user.korvais();
+  }
+]);
 
 angular.module('carnatic.controllers').controller("LoginCtrl", [
   '$scope', '$state', 'Auth', function($scope, $state, Auth) {
-    var usersRef;
-    usersRef = new Firebase("https://carnatic.firebaseio.com/users");
     $scope.auth = Auth;
     $scope.user = $scope.auth.currentUser;
     $scope.loginWithEmail = function(data) {
@@ -112,9 +118,7 @@ angular.module('carnatic.controllers').controller("LoginCtrl", [
 ]);
 
 angular.module('carnatic.controllers').controller("RegisterCtrl", [
-  '$scope', '$state', 'Auth', function($scope, $state, Auth) {
-    var ref;
-    ref = new Firebase("https://carnatic.firebaseio.com/");
+  '$scope', '$state', 'Auth', 'REF', function($scope, $state, Auth, REF) {
     return $scope.register = function(data) {
       if (data.password === data.password_confirm) {
         return Auth.createUser(data.email, data.password)["catch"](function(error) {
@@ -137,7 +141,7 @@ angular.module('carnatic.controllers').controller("RegisterCtrl", [
           }, {
             remember: "sessionOnly"
           }).then(function(authData) {
-            ref.child("user_profiles").child(authData.uid).set({
+            REF.child("user_profiles").child(authData.uid).set({
               username: data.username,
               name: data.name,
               email: data.email
@@ -155,12 +159,21 @@ angular.module('carnatic.controllers').controller("RegisterCtrl", [
 ]);
 
 angular.module('carnatic.factories').factory("Auth", [
-  '$firebaseAuth', function($firebaseAuth) {
-    var authRef, usersRef;
-    authRef = $firebaseAuth(new Firebase('https://carnatic.firebaseio.com'));
-    usersRef = new Firebase("https://carnatic.firebaseio.com/users");
+  '$firebaseAuth', 'User', 'REF', function($firebaseAuth, User, REF) {
+    var AuthFactory, authRef, usersRef;
+    authRef = $firebaseAuth(REF);
+    usersRef = REF.child('users');
+    AuthFactory = {
+      createUser: authRef.$createUser,
+      logout: authRef.$unauth,
+      loginEmail: authRef.$authWithPassword,
+      loginOAuth: authRef.$authWithOAuthPopup,
+      authRef: authRef
+    };
     authRef.$onAuth(function(authData) {
       if (authData) {
+        AuthFactory.currentUser = authData;
+        AuthFactory.user = new User(authData.uid);
         return usersRef.child(authData.uid).once('value', function(snapshot) {
           if (snapshot.val() == null) {
             return usersRef.child(authData.uid).set(authData);
@@ -168,13 +181,30 @@ angular.module('carnatic.factories').factory("Auth", [
         });
       }
     });
-    return {
-      currentUser: authRef.$getAuth(),
-      createUser: authRef.$createUser,
-      logout: authRef.$unauth,
-      loginEmail: authRef.$authWithPassword,
-      loginOAuth: authRef.$authWithOAuthPopup,
-      authRef: authRef
-    };
+    return AuthFactory;
+  }
+]);
+
+angular.module('carnatic.models').factory("KorvaiList", function($firebase) {
+  return function(userId) {
+    return $firebase(new Firebase("https://carnatic.firebaseio.com/korvais/" + userId)).$asArray();
+  };
+});
+
+angular.module('carnatic.models').factory("User", [
+  '$firebase', 'KorvaiList', function($firebase, KorvaiList) {
+    var User;
+    return User = (function() {
+      function User(userId) {
+        this.userId = userId;
+      }
+
+      User.prototype.korvais = function() {
+        return new KorvaiList(this.userId);
+      };
+
+      return User;
+
+    })();
   }
 ]);

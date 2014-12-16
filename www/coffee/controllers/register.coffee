@@ -1,9 +1,6 @@
 angular.module('carnatic.controllers')
 
-.controller "RegisterCtrl", ['$scope', '$state', 'Auth', ($scope, $state, Auth) ->
-
-  ref = new Firebase "https://carnatic.firebaseio.com/"
-
+.controller "RegisterCtrl", ['$scope', '$state', 'Auth', 'REF', ($scope, $state, Auth, REF) ->
   $scope.register = (data) ->
     if data.password == data.password_confirm
       Auth.createUser(data.email, data.password).catch (error) ->
@@ -23,7 +20,7 @@ angular.module('carnatic.controllers')
           password: data.password
         }, { remember: "sessionOnly" })
           .then (authData) ->
-            ref.child("user_profiles").child(authData.uid).set
+            REF.child("user_profiles").child(authData.uid).set
               username: data.username
               name: data.name
               email: data.email

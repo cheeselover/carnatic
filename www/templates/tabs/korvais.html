@@ -1,5 +1,6 @@
 <ion-view title="Korvais">
   <ion-content class="padding">
-    <h1>Korvais</h1>
+    <h1>Korvais</h1><hr>
+    <h2 ng-repeat="korvai in korvais">{{ korvai.$id }}: {{ korvai.$value }}</h2>
   </ion-content>
 </ion-view>

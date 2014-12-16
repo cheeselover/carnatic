@@ -3,6 +3,7 @@ angular.module('carnatic', [
   'firebase'
   'carnatic.controllers'
   'carnatic.factories'
+  'carnatic.models'
 ])
 
 .run ['$ionicPlatform', '$rootScope', '$state', 'Auth', ($ionicPlatform, $rootScope, $state, Auth) ->
@@ -61,5 +62,8 @@ angular.module('carnatic', [
   })
 ]
 
+.value('REF', new Firebase("https://carnatic.firebaseio.com/"))
+
 angular.module 'carnatic.controllers', []
 angular.module 'carnatic.factories', []
+angular.module 'carnatic.models', []
