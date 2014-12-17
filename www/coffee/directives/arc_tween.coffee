@@ -51,7 +51,7 @@ angular.module('carnatic.directives')
         if not newVal or newVal is oldVal
           return
         else
-          foreground.transition().duration(750).call(arcTween, newVal / 100 * tau)
+          foreground.transition().duration(500).call(arcTween, newVal / 100 * tau)
 
       # Creates a tween on the specified transition's "d" attribute, transitioning
       # any selected arcs from their current angle to the specified new angle.

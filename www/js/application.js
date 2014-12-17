@@ -73,22 +73,6 @@ angular.module('carnatic.controllers').controller("AccountCtrl", function($scope
   return "placeholder";
 });
 
-angular.module('carnatic.controllers').controller("ComposeCtrl", [
-  '$scope', 'Auth', function($scope, Auth) {
-    $scope.createKorvai = function(korvai) {
-      if (korvai.content !== "") {
-        Auth.user.korvais().$add(korvai.content);
-        return korvai.content = "";
-      }
-    };
-    return $scope.countMatras = function(content) {
-      var vowels;
-      vowels = content.match(/[aeiou]/gi);
-      return $scope.matras = vowels ? vowels.length : 0;
-    };
-  }
-]);
-
 angular.module('carnatic.controllers').controller("KorvaisCtrl", [
   '$scope', 'Auth', function($scope, Auth) {
     var user;
@@ -169,6 +153,46 @@ angular.module('carnatic.controllers').controller("RegisterCtrl", [
     };
   }
 ]);
+
+angular.module('carnatic.directives').directive('arcTween', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      val: '='
+    },
+    link: function(scope, element, attrs) {
+      var arc, arcTween, background, foreground, height, svg, tau, width;
+      width = 500;
+      height = 360;
+      tau = 2 * Math.PI;
+      arc = d3.svg.arc().innerRadius(60).outerRadius(80).startAngle(0);
+      svg = d3.select(element[0]).append("svg").attr("width", width).attr("height", height).append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+      background = svg.append("path").datum({
+        endAngle: tau
+      }).style("fill", "#ddd").attr("d", arc);
+      foreground = svg.append("path").datum({
+        endAngle: .75 * tau
+      }).style("fill", "orange").attr("d", arc);
+      scope.$watch('val', function(newVal, oldVal) {
+        if (!newVal || newVal === oldVal) {
+
+        } else {
+          return foreground.transition().duration(500).call(arcTween, newVal / 100 * tau);
+        }
+      });
+      return arcTween = function(transition, newAngle) {
+        return transition.attrTween("d", function(d) {
+          var interpolate;
+          interpolate = d3.interpolate(d.endAngle, newAngle);
+          return function(t) {
+            d.endAngle = interpolate(t);
+            return arc(d);
+          };
+        });
+      };
+    }
+  };
+});
 
 angular.module('carnatic.factories').factory("Auth", [
   '$firebaseAuth', 'User', 'REF', function($firebaseAuth, User, REF) {

@@ -2,11 +2,12 @@
   <ion-content class="padding" scroll="false">
     <form ng-submit="createKorvai(korvai)">
       <label class="item item-input">
-        <textarea ng-model="korvai.content" ng-change="countMatras(korvai.content)"placeholder="Make your korvai..."></textarea>
+        <textarea ng-model="korvai.content" placeholder="Make your korvai..."></textarea>
       </label>
 
       <button class="button button-block button-positive" type="submit">I'm done!</button>
     </form>
+    <button class="button button-block button-assertive" ng-click="countMatras(korvai.content)">Count matras</button>
 
     <h1>Number of matras: {{ matras || 0 }}</h1>
     <arc-tween val="matras"></arc-tween>
