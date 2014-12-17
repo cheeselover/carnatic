@@ -86,15 +86,7 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
       }
     };
     return $scope.countMatras = function(korvai) {
-      var r, repeaters, _i, _len, _results;
-      $scope.matras = KorvaiHelper.countMatras(korvai);
-      repeaters = KorvaiHelper.findRepeaters(korvai);
-      _results = [];
-      for (_i = 0, _len = repeaters.length; _i < _len; _i++) {
-        r = repeaters[_i];
-        _results.push(console.log(KorvaiHelper.repeatString(r)));
-      }
-      return _results;
+      return $scope.matras = KorvaiHelper.countMatras(korvai);
     };
   }
 ]);
@@ -282,12 +274,28 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
       lastColon = repeater.lastIndexOf(":");
       return repeater.substring(0, lastColon).repeat(parseInt(repeater.slice(lastColon + 1)));
     },
-    countMatras: function(str) {
-      var matras, semicolons, vowels;
-      vowels = str.match(/[aeiou,]/gi);
-      semicolons = str.match(/[;]/gi);
+    matrasPerLine: function(line) {
+      var matras, r, repeatedString, repeaters, semicolons, vowels, _i, _len;
+      repeaters = this.findRepeaters(line);
+      for (_i = 0, _len = repeaters.length; _i < _len; _i++) {
+        r = repeaters[_i];
+        repeatedString = this.repeatString(r);
+        line = line.replace("{" + r + "}", repeatedString);
+      }
+      vowels = line.match(/[aeiou,]/gi);
+      semicolons = line.match(/[;]/gi);
       matras = vowels ? vowels.length : 0;
       matras += semicolons ? semicolons.length * 2 : 0;
+      return matras;
+    },
+    countMatras: function(korvai) {
+      var l, lines, matras, _i, _len;
+      matras = 0;
+      lines = korvai.match(/([^\r\n]+)/g);
+      for (_i = 0, _len = lines.length; _i < _len; _i++) {
+        l = lines[_i];
+        matras += this.matrasPerLine(l);
+      }
       return matras;
     }
   };

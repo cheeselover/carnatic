@@ -8,8 +8,5 @@ angular.module('carnatic.controllers')
 
   $scope.countMatras = (korvai) ->
     $scope.matras = KorvaiHelper.countMatras(korvai)
-    repeaters = KorvaiHelper.findRepeaters(korvai)
-    for r in repeaters
-      console.log KorvaiHelper.repeatString(r)
 
 ]

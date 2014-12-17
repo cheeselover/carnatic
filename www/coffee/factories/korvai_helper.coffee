@@ -39,11 +39,27 @@ angular.module('carnatic.factories')
       return repeater.substring(0, lastColon)
         .repeat(parseInt(repeater.slice(lastColon + 1)))
 
-    # countMatras(str) produces the number of matras in the given korvai string
-    countMatras: (str) ->
-      vowels = str.match /[aeiou,]/gi
-      semicolons = str.match /[;]/gi
+    # matrasPerLine(str) produces the number of matras in the given korvai string
+    # the string must NOT contain repeaters
+    matrasPerLine: (line) ->
+      repeaters = @findRepeaters(line)
+
+      for r in repeaters
+        repeatedString = @repeatString(r)
+        line = line.replace("{" + r + "}", repeatedString)
+
+      vowels = line.match /[aeiou,]/gi
+      semicolons = line.match /[;]/gi
       matras = if vowels then vowels.length else 0
       matras += if semicolons then semicolons.length * 2 else 0
+      return matras
+
+    countMatras: (korvai) ->
+      matras = 0
+      lines = korvai.match /([^\r\n]+)/g
+
+      for l in lines
+        matras += @matrasPerLine(l)
+
       return matras
   }
