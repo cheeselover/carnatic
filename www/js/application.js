@@ -69,55 +69,32 @@ angular.module('carnatic.models', []);
 
 angular.module('carnatic.directives', []);
 
+String.prototype.repeat = function(num) {
+  return new Array(num + 1).join(this);
+};
+
 angular.module('carnatic.controllers').controller("AccountCtrl", function($scope) {
   return "placeholder";
 });
 
 angular.module('carnatic.controllers').controller("ComposeCtrl", [
-  '$scope', 'Auth', function($scope, Auth) {
-    var findRepeaters;
+  '$scope', 'Auth', 'KorvaiHelper', function($scope, Auth, KorvaiHelper) {
     $scope.createKorvai = function(korvai) {
       if (korvai.content !== "") {
         Auth.user.korvais().$add(korvai.content);
         return korvai.content = "";
       }
     };
-    findRepeaters = function(str) {
-      var chr, endPos, openBrackets, repeaters, startPos;
-      endPos = -1;
-      repeaters = [];
-      while (true) {
-        while (str.charAt(endPos + 1) !== "{" && endPos < str.length) {
-          endPos++;
-        }
-        if (endPos === str.length) {
-          break;
-        }
-        openBrackets = 0;
-        startPos = endPos;
-        while (true) {
-          chr = str.charAt(++endPos);
-          if (chr === "{") {
-            openBrackets++;
-          } else if (chr === "}") {
-            openBrackets--;
-          }
-          if (!(openBrackets > 0)) {
-            break;
-          }
-        }
-        repeaters.push(str.substring(startPos, endPos + 1));
-      }
-      return repeaters;
-    };
     return $scope.countMatras = function(korvai) {
-      var matras, semicolons, vowels;
-      vowels = korvai.match(/[aeiou,]/gi);
-      semicolons = korvai.match(/[;]/gi);
-      matras = vowels ? vowels.length : 0;
-      matras += semicolons ? semicolons.length * 2 : 0;
-      $scope.matras = matras;
-      return alert(findRepeaters(korvai));
+      var r, repeaters, _i, _len, _results;
+      $scope.matras = KorvaiHelper.countMatras(korvai);
+      repeaters = KorvaiHelper.findRepeaters(korvai);
+      _results = [];
+      for (_i = 0, _len = repeaters.length; _i < _len; _i++) {
+        r = repeaters[_i];
+        _results.push(console.log(KorvaiHelper.repeatString(r)));
+      }
+      return _results;
     };
   }
 ]);
@@ -269,6 +246,52 @@ angular.module('carnatic.factories').factory("Auth", [
     return AuthFactory;
   }
 ]);
+
+angular.module('carnatic.factories').factory("KorvaiHelper", function() {
+  return {
+    findRepeaters: function(str) {
+      var chr, endPos, openBrackets, repeaters, startPos;
+      endPos = -1;
+      repeaters = [];
+      while (true) {
+        while (str.charAt(endPos + 1) !== "{" && endPos < str.length) {
+          endPos++;
+        }
+        if (endPos === str.length) {
+          break;
+        }
+        openBrackets = 0;
+        startPos = endPos;
+        while (true) {
+          chr = str.charAt(++endPos);
+          if (chr === "{") {
+            openBrackets++;
+          } else if (chr === "}") {
+            openBrackets--;
+          }
+          if (!(openBrackets > 0)) {
+            break;
+          }
+        }
+        repeaters.push(str.substring(startPos + 2, endPos));
+      }
+      return repeaters;
+    },
+    repeatString: function(repeater) {
+      var lastColon;
+      lastColon = repeater.lastIndexOf(":");
+      return repeater.substring(0, lastColon).repeat(parseInt(repeater.slice(lastColon + 1)));
+    },
+    countMatras: function(str) {
+      var matras, semicolons, vowels;
+      vowels = str.match(/[aeiou,]/gi);
+      semicolons = str.match(/[;]/gi);
+      matras = vowels ? vowels.length : 0;
+      matras += semicolons ? semicolons.length * 2 : 0;
+      return matras;
+    }
+  };
+});
 
 angular.module('carnatic.models').factory("KorvaiList", function($firebase) {
   return function(userId) {
