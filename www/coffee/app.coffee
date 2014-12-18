@@ -74,4 +74,4 @@ angular.module 'carnatic.directives', []
 
 # Miscellaneous helpers
 String.prototype.repeat = (num) ->
-  new Array(num + 1).join(@);
+  new Array(num + 1).join(@)
