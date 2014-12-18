@@ -124,6 +124,15 @@ angular.module('carnatic.controllers').controller("LoginCtrl", [
         return alert("Authentication failed: " + error);
       });
     };
+    $scope.loginWithGoogle = function() {
+      return Auth.loginOAuth('google', {
+        remember: "sessionOnly"
+      }).then(function(authData) {
+        return $state.go('tab.compose');
+      })["catch"](function(error) {
+        return alert("Authentication failed: " + error);
+      });
+    };
     return $scope.logout = function() {
       $scope.auth.logout();
       return location.reload();

@@ -1,5 +1,5 @@
 <ion-view title="Compose">
-  <ion-content class="padding" scroll="false">
+  <ion-content class="padding" scroll="true">
     <form ng-submit="createKorvai(korvai)">
       <label class="item item-input">
         <textarea ng-model="korvai.content" placeholder="Make your korvai..."></textarea>
@@ -10,6 +10,39 @@
     <button class="button button-block button-assertive" ng-click="countMatras(korvai.content)">Count matras</button>
 
     <h1>Number of matras: {{ matras || 0 }}</h1>
-    <arc-tween val="matras"></arc-tween>
+
+    <div class="row">
+      <div class="col">
+        <arc-tween val="matras"></arc-tween>
+      </div>
+
+      <div class="col">
+        <div class="list">
+          <label class="item item-radio">
+            <input type="radio" name="group" checked>
+            <div class="item-content">Adi</div>
+            <i class="radio-icon ion-checkmark"></i>
+          </label>
+
+          <label class="item item-radio">
+            <input type="radio" name="group">
+            <div class="item-content">Rupaka</div>
+            <i class="radio-icon ion-checkmark"></i>
+          </label>
+
+          <label class="item item-radio">
+            <input type="radio" name="group">
+            <div class="item-content">Misra Chapu</div>
+            <i class="radio-icon ion-checkmark"></i>
+          </label>
+
+          <label class="item item-radio">
+            <input type="radio" name="group">
+            <div class="item-content">Kanda Chapu</div>
+            <i class="radio-icon ion-checkmark"></i>
+          </label>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

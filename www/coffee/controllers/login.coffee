@@ -21,6 +21,13 @@ angular.module('carnatic.controllers')
       .catch (error) ->
         alert "Authentication failed: #{error}"
 
+  $scope.loginWithGoogle = ->
+    Auth.loginOAuth('google', { remember: "sessionOnly" })
+      .then (authData) ->
+        $state.go 'tab.compose'
+      .catch (error) ->
+        alert "Authentication failed: #{error}"
+
   $scope.logout = ->
     $scope.auth.logout()
     location.reload()
