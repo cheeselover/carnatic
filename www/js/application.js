@@ -197,7 +197,7 @@ angular.module('carnatic.directives').directive('arcTween', function() {
       height: '@'
     },
     link: function(scope, element, attrs) {
-      var arc, arcTween, background, foreground, height, svg, tau, width;
+      var arc, arcTween, background, foreground, height, svg, tau, updateTween, width;
       width = scope.width;
       height = scope.height;
       tau = 2 * Math.PI;
@@ -209,25 +209,36 @@ angular.module('carnatic.directives').directive('arcTween', function() {
       foreground = svg.append("path").datum({
         endAngle: .127 * tau
       }).style("fill", "orange").attr("d", arc);
+      updateTween = function(val, thalam, mod) {
+        var percentage;
+        percentage = (val - mod) % thalam / thalam;
+        if (percentage === 0) {
+          foreground.style("fill", "green");
+          return foreground.transition().duration(500).call(arcTween, tau);
+        } else {
+          foreground.style("fill", "orange");
+          return foreground.transition().duration(500).call(arcTween, percentage * tau);
+        }
+      };
       scope.$watch('val', function(newVal, oldVal) {
-        if (!newVal || newVal === oldVal) {
+        if (newVal === oldVal) {
 
         } else {
-          return foreground.transition().duration(500).call(arcTween, (newVal - scope.mod) % scope.thalam / scope.thalam * tau);
+          return updateTween(newVal, scope.thalam, scope.mod);
         }
       });
       scope.$watch('thalam', function(newThalam, oldThalam) {
-        if (!newThalam || newThalam === oldThalam) {
+        if (newThalam === oldThalam) {
 
         } else {
-          return foreground.transition().duration(500).call(arcTween, (scope.val - scope.mod) % newThalam / newThalam * tau);
+          return updateTween(scope.val, newThalam, scope.mod);
         }
       });
       scope.$watch('mod', function(newMod, oldMod) {
-        if (!newMod || newMod === oldMod) {
+        if (newMod === oldMod) {
 
         } else {
-          return foreground.transition().duration(500).call(arcTween, (scope.val - newMod) % scope.thalam / scope.thalam * tau);
+          return updateTween(scope.val, scope.thalam, newMod);
         }
       });
       return arcTween = function(transition, newAngle) {
@@ -240,6 +251,15 @@ angular.module('carnatic.directives').directive('arcTween', function() {
           };
         });
       };
+    }
+  };
+});
+
+angular.module('carnatic.directives').directive('textareaAutosize', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      return $(element[0]).autosize();
     }
   };
 });

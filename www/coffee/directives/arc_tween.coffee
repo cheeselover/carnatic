@@ -42,27 +42,32 @@ angular.module('carnatic.directives')
           .style("fill", "orange")
           .attr("d", arc)
 
-      # Every so often, start a transition to a new random angle. Use transition.call
-      # (identical to selection.call) so that we can encapsulate the logic for
-      # tweening the arc in a separate function below.
+      updateTween = (val, thalam, mod) ->
+        percentage = (val - mod) % thalam / thalam
+        if percentage is 0
+          foreground.style "fill", "green"
+          foreground.transition().duration(500).call(arcTween, tau)
+        else
+          foreground.style "fill", "orange"
+          foreground.transition().duration(500).call(arcTween, percentage * tau)
 
       scope.$watch 'val', (newVal, oldVal) ->
-        if not newVal or newVal is oldVal
+        if newVal is oldVal
           return
         else
-          foreground.transition().duration(500).call(arcTween, (newVal - scope.mod) % scope.thalam / scope.thalam * tau)
+          updateTween newVal, scope.thalam, scope.mod
 
       scope.$watch 'thalam', (newThalam, oldThalam) ->
-        if not newThalam or newThalam is oldThalam
+        if newThalam is oldThalam
           return
         else
-          foreground.transition().duration(500).call(arcTween, (scope.val - scope.mod) % newThalam / newThalam * tau)
+          updateTween scope.val, newThalam, scope.mod
 
       scope.$watch 'mod', (newMod, oldMod) ->
-        if not newMod or newMod is oldMod
+        if newMod is oldMod
           return
         else
-          foreground.transition().duration(500).call(arcTween, (scope.val - newMod) % scope.thalam / scope.thalam * tau)
+          updateTween scope.val, scope.thalam, newMod
 
       # Creates a tween on the specified transition's "d" attribute, transitioning
       # any selected arcs from their current angle to the specified new angle.
