@@ -81,12 +81,17 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
   '$scope', 'Auth', 'KorvaiHelper', function($scope, Auth, KorvaiHelper) {
     $scope.createKorvai = function(korvai) {
       if (korvai.content !== "") {
-        Auth.user.korvais().$add(korvai.content);
+        Auth.user.korvais().$add(korvai);
         return korvai.content = "";
       }
     };
-    return $scope.countMatras = function(korvai) {
-      return $scope.matras = KorvaiHelper.countMatras(korvai);
+    $scope.countMatras = function(content) {
+      return $scope.matras = KorvaiHelper.countMatras(content);
+    };
+    return $scope.korvai = {
+      content: "thathinkinathom,\n(thathinkinathom x2),\n(thathinkinathom x3)",
+      thalam: 32,
+      mod: 0
     };
   }
 ]);
@@ -185,12 +190,16 @@ angular.module('carnatic.directives').directive('arcTween', function() {
   return {
     restrict: 'E',
     scope: {
-      val: '='
+      val: '=',
+      thalam: '=',
+      mod: '=',
+      width: '@',
+      height: '@'
     },
     link: function(scope, element, attrs) {
       var arc, arcTween, background, foreground, height, svg, tau, width;
-      width = 500;
-      height = 360;
+      width = scope.width;
+      height = scope.height;
       tau = 2 * Math.PI;
       arc = d3.svg.arc().innerRadius(60).outerRadius(80).startAngle(0);
       svg = d3.select(element[0]).append("svg").attr("width", width).attr("height", height).append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
@@ -198,13 +207,27 @@ angular.module('carnatic.directives').directive('arcTween', function() {
         endAngle: tau
       }).style("fill", "#ddd").attr("d", arc);
       foreground = svg.append("path").datum({
-        endAngle: .75 * tau
+        endAngle: .127 * tau
       }).style("fill", "orange").attr("d", arc);
       scope.$watch('val', function(newVal, oldVal) {
         if (!newVal || newVal === oldVal) {
 
         } else {
-          return foreground.transition().duration(500).call(arcTween, newVal / 100 * tau);
+          return foreground.transition().duration(500).call(arcTween, (newVal - scope.mod) % scope.thalam / scope.thalam * tau);
+        }
+      });
+      scope.$watch('thalam', function(newThalam, oldThalam) {
+        if (!newThalam || newThalam === oldThalam) {
+
+        } else {
+          return foreground.transition().duration(500).call(arcTween, (scope.val - scope.mod) % newThalam / newThalam * tau);
+        }
+      });
+      scope.$watch('mod', function(newMod, oldMod) {
+        if (!newMod || newMod === oldMod) {
+
+        } else {
+          return foreground.transition().duration(500).call(arcTween, (scope.val - newMod) % scope.thalam / scope.thalam * tau);
         }
       });
       return arcTween = function(transition, newAngle) {

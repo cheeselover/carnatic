@@ -3,15 +3,20 @@ angular.module('carnatic.directives')
 .directive 'arcTween', ->
   return {
     restrict: 'E'
-    scope: { val: '=' }
+    scope:
+      val: '='
+      thalam: '='
+      mod: '='
+      width: '@'
+      height: '@'
     link: (scope, element, attrs) ->
-      width = 500
-      height = 360
+      width = scope.width
+      height = scope.height
       tau = 2 * Math.PI # http://tauday.com/tau-manifesto
 
       # An arc function with all values bound except the endAngle. So, to compute an
       # SVG path string for a given angle, we pass an object with an endAngle
-      # property to the `arc` function, and it will return the corresponding string.
+      # property to the 'arc' function, and it will return the corresponding string.
       arc = d3.svg.arc()
           .innerRadius(60)
           .outerRadius(80)
@@ -33,7 +38,7 @@ angular.module('carnatic.directives')
 
       # Add the foreground arc in orange, currently showing 12.7%.
       foreground = svg.append("path")
-          .datum({ endAngle: .75 * tau })
+          .datum({ endAngle: .127 * tau })
           .style("fill", "orange")
           .attr("d", arc)
 
@@ -41,17 +46,23 @@ angular.module('carnatic.directives')
       # (identical to selection.call) so that we can encapsulate the logic for
       # tweening the arc in a separate function below.
 
-      # setInterval(->
-      #   foreground.transition()
-      #       .duration(750)
-      #       .call(arcTween, Math.random() * tau)
-      # , 1500)
-
       scope.$watch 'val', (newVal, oldVal) ->
         if not newVal or newVal is oldVal
           return
         else
-          foreground.transition().duration(500).call(arcTween, newVal / 100 * tau)
+          foreground.transition().duration(500).call(arcTween, (newVal - scope.mod) % scope.thalam / scope.thalam * tau)
+
+      scope.$watch 'thalam', (newThalam, oldThalam) ->
+        if not newThalam or newThalam is oldThalam
+          return
+        else
+          foreground.transition().duration(500).call(arcTween, (scope.val - scope.mod) % newThalam / newThalam * tau)
+
+      scope.$watch 'mod', (newMod, oldMod) ->
+        if not newMod or newMod is oldMod
+          return
+        else
+          foreground.transition().duration(500).call(arcTween, (scope.val - newMod) % scope.thalam / scope.thalam * tau)
 
       # Creates a tween on the specified transition's "d" attribute, transitioning
       # any selected arcs from their current angle to the specified new angle.
