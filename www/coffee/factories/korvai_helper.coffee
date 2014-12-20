@@ -5,6 +5,7 @@ angular.module('carnatic.factories')
     # findRepeaters(str) produces an array of all the content of
     # the "repeaters" in the given korvai string
     # a repeater is of the form "(thathinkinathom x3)"
+    # TODO: clean this up, it's very messy
     findRepeaters: (str) ->
       endPos = -1
       repeaters = []
@@ -25,7 +26,9 @@ angular.module('carnatic.factories')
           else if chr is ")"
             openBrackets--
 
-          break unless openBrackets > 0
+          break unless openBrackets > 0 and endPos < str.length
+
+        if endPos is str.length then break
 
         repeaters.push str.substring(startPos + 2, endPos)
 
@@ -50,15 +53,34 @@ angular.module('carnatic.factories')
       str.replace "(#{r})", @repeatString(r)
 
     # countMatras(korvai) counts the number of matras in the korvai
+    # TODO: This only works for 2nd speed, make it work for 3rd speed
     countMatras: (korvai) ->
       repeaters = @findRepeaters(korvai)
+      matras = 0
 
       for r in repeaters
         korvai = @replaceRepeater(korvai, r)
 
-      vowels = korvai.match /[aeiou,]/gi
-      semicolons = korvai.match /[;]/gi
-      matras = if vowels then vowels.length else 0
+      korvaiWords = korvai.replace(/(\r\n|\n|\r)/gm, ' ').split(' ')
+
+      for word in korvaiWords
+        vowels = word.match /[aeiou]/g
+
+        if vowels
+          length = vowels.length
+          if length is 1
+            matras += 1
+          else
+            matras += length / 2
+
+      dashes = korvai.match /-/g
+      matras += if dashes then dashes.length / 2 else 0
+
+      commas = korvai.match /,/g
+      matras += if commas then commas.length else 0
+
+      semicolons = korvai.match /;/g
       matras += if semicolons then semicolons.length * 2 else 0
+
       return matras
   }

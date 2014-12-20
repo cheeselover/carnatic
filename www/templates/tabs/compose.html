@@ -5,9 +5,9 @@
         <textarea textarea-autosize ng-model="korvai.content" placeholder="Enter korvai here..."></textarea>
       </label>
 
-      <button class="button button-block button-positive" type="submit">I'm done!</button>
     </form>
     <button class="button button-block button-assertive" ng-click="countMatras(korvai.content)">Count matras</button>
+    <button class="button button-block button-positive" ng-click="createKorvai(korvai)">UPLOAD</button>
 
     <h1>Number of matras: {{ matras || 0 }}</h1>
 

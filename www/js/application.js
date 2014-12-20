@@ -81,15 +81,14 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
   '$scope', 'Auth', 'KorvaiHelper', function($scope, Auth, KorvaiHelper) {
     $scope.createKorvai = function(korvai) {
       if (korvai.content !== "") {
-        Auth.user.korvais().$add(korvai);
-        return korvai.content = "";
+        return Auth.user.korvais().$add(korvai);
       }
     };
     $scope.countMatras = function(content) {
       return $scope.matras = KorvaiHelper.countMatras(content);
     };
     return $scope.korvai = {
-      content: "thathinkinathom,\n(thathinkinathom x2),\n(thathinkinathom x3)",
+      content: "thathinkinathom-\n(thathinkinathom x2)-\n(thathinkinathom x3)",
       thalam: 32,
       mod: 0
     };
@@ -313,9 +312,12 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
           } else if (chr === ")") {
             openBrackets--;
           }
-          if (!(openBrackets > 0)) {
+          if (!(openBrackets > 0 && endPos < str.length)) {
             break;
           }
+        }
+        if (endPos === str.length) {
+          break;
         }
         repeaters.push(str.substring(startPos + 2, endPos));
       }
@@ -336,15 +338,31 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
       return str.replace("(" + r + ")", this.repeatString(r));
     },
     countMatras: function(korvai) {
-      var matras, r, repeaters, semicolons, vowels, _i, _len;
+      var commas, dashes, korvaiWords, length, matras, r, repeaters, semicolons, vowels, word, _i, _j, _len, _len1;
       repeaters = this.findRepeaters(korvai);
+      matras = 0;
       for (_i = 0, _len = repeaters.length; _i < _len; _i++) {
         r = repeaters[_i];
         korvai = this.replaceRepeater(korvai, r);
       }
-      vowels = korvai.match(/[aeiou,]/gi);
-      semicolons = korvai.match(/[;]/gi);
-      matras = vowels ? vowels.length : 0;
+      korvaiWords = korvai.replace(/(\r\n|\n|\r)/gm, ' ').split(' ');
+      for (_j = 0, _len1 = korvaiWords.length; _j < _len1; _j++) {
+        word = korvaiWords[_j];
+        vowels = word.match(/[aeiou]/g);
+        if (vowels) {
+          length = vowels.length;
+          if (length === 1) {
+            matras += 1;
+          } else {
+            matras += length / 2;
+          }
+        }
+      }
+      dashes = korvai.match(/-/g);
+      matras += dashes ? dashes.length / 2 : 0;
+      commas = korvai.match(/,/g);
+      matras += commas ? commas.length : 0;
+      semicolons = korvai.match(/;/g);
       matras += semicolons ? semicolons.length * 2 : 0;
       return matras;
     }
