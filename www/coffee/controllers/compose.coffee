@@ -6,7 +6,7 @@ angular.module('carnatic.controllers')
       Auth.user.korvais().$add korvai
 
   $scope.countMatras = (content) ->
-    $scope.matras = KorvaiHelper.countMatras(content)
+    $scope.matras = KorvaiHelper.countMatras(content, true)
 
   $scope.korvai =
     content: "thathinkinathom,\n(thathinkinathom /2),\n(thathinkinathom /3)"

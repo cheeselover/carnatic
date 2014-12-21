@@ -85,7 +85,7 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
       }
     };
     $scope.countMatras = function(content) {
-      return $scope.matras = KorvaiHelper.countMatras(content);
+      return $scope.matras = KorvaiHelper.countMatras(content, true);
     };
     return $scope.korvai = {
       content: "thathinkinathom,\n(thathinkinathom /2),\n(thathinkinathom /3)",
@@ -350,7 +350,7 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
         return;
       }
       nString = n.substring(0, lastSlash);
-      return this.countMatras(nString) * 4 / (parseInt(n.slice(lastSlash + 1)));
+      return this.countMatras(nString, false) * 4 / (parseInt(n.slice(lastSlash + 1)));
     },
     matrasWithoutModifiers: function(korvai) {
       var commas, korvaiWords, matras, semicolons, vowels, word, _i, _len;
@@ -369,14 +369,16 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
       matras += semicolons ? semicolons.length * 2 : 0;
       return matras;
     },
-    countMatras: function(korvai) {
+    countMatras: function(korvai, hasNadais) {
       var matras, n, nadais, r, repeaters, _i, _j, _len, _len1;
       matras = 0;
-      nadais = this.findModifiers(korvai, "[", "]");
-      for (_i = 0, _len = nadais.length; _i < _len; _i++) {
-        n = nadais[_i];
-        matras += this.nadaiMatras(n);
-        korvai = korvai.replace("[" + n + "]", '');
+      if (hasNadais) {
+        nadais = this.findModifiers(korvai, "[", "]");
+        for (_i = 0, _len = nadais.length; _i < _len; _i++) {
+          n = nadais[_i];
+          matras += this.nadaiMatras(n);
+          korvai = korvai.replace("[" + n + "]", '');
+        }
       }
       repeaters = this.findModifiers(korvai, "(", ")");
       for (_j = 0, _len1 = repeaters.length; _j < _len1; _j++) {

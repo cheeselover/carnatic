@@ -66,7 +66,7 @@ angular.module('carnatic.factories')
 
       nString = n.substring(0, lastSlash)
 
-      @countMatras(nString) * 4 / (parseInt(n.slice(lastSlash + 1)))
+      @countMatras(nString, false) * 4 / (parseInt(n.slice(lastSlash + 1)))
 
     matrasWithoutModifiers: (korvai) ->
       matras = 0
@@ -74,7 +74,13 @@ angular.module('carnatic.factories')
 
       for word in korvaiWords
         vowels = word.match /[aeiou]/g
-        if vowels then matras += vowels.length
+        if vowels
+          matras += vowels.length
+          # length = vowels.length
+          # if length is 1
+          #   matras += 2
+          # else
+          #   matras += length
 
       commas = korvai.match /,/g
       matras += if commas then commas.length else 0
@@ -86,13 +92,15 @@ angular.module('carnatic.factories')
 
     # countMatras(korvai) counts the number of matras in the korvai
     # TODO: this only works for 2nd speed
-    countMatras: (korvai) ->
+    countMatras: (korvai, hasNadais) ->
       matras = 0
-      nadais = @findModifiers(korvai, "[", "]")
 
-      for n in nadais
-        matras += @nadaiMatras(n)
-        korvai = korvai.replace "[#{n}]", ''
+      if hasNadais
+        nadais = @findModifiers(korvai, "[", "]")
+
+        for n in nadais
+          matras += @nadaiMatras(n)
+          korvai = korvai.replace "[#{n}]", ''
 
       repeaters = @findModifiers(korvai, "(", ")")
 
