@@ -2,16 +2,18 @@ angular.module('carnatic.factories')
 
 .factory "KorvaiHelper", ->
   return {
-    # findRepeaters(str) produces an array of all the content of
-    # the "repeaters" in the given korvai string
-    # a repeater is of the form "(thathinkinathom x3)"
+    # findModifiers(str, oBracket, cBracket) produces an array of all the
+    # content of the "modifiers" in the given korvai string, where a modifier
+    # is either a repeater or nadai
+    # a repeater is of the form "(thathinkinathom /3)" with parentheses
+    # a nadai is of the form "[thathinkinathom /3]" with square brackets
     # TODO: clean this up, it's very messy
-    findRepeaters: (str) ->
+    findModifiers: (str, oBracket, cBracket) ->
       endPos = -1
-      repeaters = []
+      modifiers = []
 
       while true
-        while str.charAt(endPos + 1) isnt "(" and endPos < str.length
+        while str.charAt(endPos + 1) isnt oBracket and endPos < str.length
           endPos++
 
         if endPos is str.length then break
@@ -21,26 +23,28 @@ angular.module('carnatic.factories')
 
         while true
           chr = str.charAt(++endPos)
-          if chr is "("
+          if chr is oBracket
             openBrackets++
-          else if chr is ")"
+          else if chr is cBracket
             openBrackets--
 
           break unless openBrackets > 0 and endPos < str.length
 
         if endPos is str.length then break
 
-        repeaters.push str.substring(startPos + 2, endPos)
+        modifiers.push str.substring(startPos + 2, endPos)
 
-      return repeaters
+      return modifiers
 
     # repeatString(r) consumes a repeater (as defined above)
     # and produces the repeated sequence as a string
-    # e.g. (thathinkinathom x3) produces "thathinkinathom thathinkinathom thathinkinathom "
+    # e.g. (thathinkinathom /3) produces "thathinkinathom thathinkinathom thathinkinathom "
     repeatString: (r) ->
-      lastColon = r.lastIndexOf "x"
+      lastColon = r.lastIndexOf "/"
+      if lastColon is -1 then return
+
       rString = r.substring(0, lastColon)
-      repeaters = @findRepeaters(rString)
+      repeaters = @findModifiers(rString, "(", ")")
 
       for j in repeaters
         rString = @replaceRepeater(rString, j)
@@ -52,29 +56,25 @@ angular.module('carnatic.factories')
     replaceRepeater: (str, r) ->
       str.replace "(#{r})", @repeatString(r)
 
-    # countMatras(korvai) counts the number of matras in the korvai
-    # TODO: This only works for 2nd speed, make it work for 3rd speed
-    countMatras: (korvai) ->
-      repeaters = @findRepeaters(korvai)
+    # repeaterMatras(r) counts the number of matras in the given repeater
+    repeaterMatras: (r) ->
+      @matrasWithoutModifiers(@repeatString(r))
+
+    nadaiMatras: (n) ->
+      lastSlash = n.lastIndexOf "/"
+      if lastSlash is -1 then return
+
+      nString = n.substring(0, lastSlash)
+
+      @countMatras(nString) * 4 / (parseInt(n.slice(lastSlash + 1)))
+
+    matrasWithoutModifiers: (korvai) ->
       matras = 0
-
-      for r in repeaters
-        korvai = @replaceRepeater(korvai, r)
-
       korvaiWords = korvai.replace(/(\r\n|\n|\r)/gm, ' ').split(' ')
 
       for word in korvaiWords
         vowels = word.match /[aeiou]/g
-
-        if vowels
-          length = vowels.length
-          if length is 1
-            matras += 1
-          else
-            matras += length / 2
-
-      dashes = korvai.match /-/g
-      matras += if dashes then dashes.length / 2 else 0
+        if vowels then matras += vowels.length
 
       commas = korvai.match /,/g
       matras += if commas then commas.length else 0
@@ -82,5 +82,24 @@ angular.module('carnatic.factories')
       semicolons = korvai.match /;/g
       matras += if semicolons then semicolons.length * 2 else 0
 
+      return matras
+
+    # countMatras(korvai) counts the number of matras in the korvai
+    # TODO: this only works for 2nd speed
+    countMatras: (korvai) ->
+      matras = 0
+      nadais = @findModifiers(korvai, "[", "]")
+
+      for n in nadais
+        matras += @nadaiMatras(n)
+        korvai = korvai.replace "[#{n}]", ''
+
+      repeaters = @findModifiers(korvai, "(", ")")
+
+      for r in repeaters
+        matras += @repeaterMatras(r)
+        korvai = korvai.replace "(#{r})", ''
+
+      matras += @matrasWithoutModifiers(korvai)
       return matras
   }

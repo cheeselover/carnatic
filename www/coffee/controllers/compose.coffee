@@ -9,7 +9,7 @@ angular.module('carnatic.controllers')
     $scope.matras = KorvaiHelper.countMatras(content)
 
   $scope.korvai =
-    content: "thathinkinathom-\n(thathinkinathom x2)-\n(thathinkinathom x3)"
+    content: "thathinkinathom,\n(thathinkinathom /2),\n(thathinkinathom /3)"
     thalam: 32
     mod: 0
 ]

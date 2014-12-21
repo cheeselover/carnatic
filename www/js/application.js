@@ -88,7 +88,7 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
       return $scope.matras = KorvaiHelper.countMatras(content);
     };
     return $scope.korvai = {
-      content: "thathinkinathom-\n(thathinkinathom x2)-\n(thathinkinathom x3)",
+      content: "thathinkinathom,\n(thathinkinathom /2),\n(thathinkinathom /3)",
       thalam: 32,
       mod: 0
     };
@@ -292,12 +292,12 @@ angular.module('carnatic.factories').factory("Auth", [
 
 angular.module('carnatic.factories').factory("KorvaiHelper", function() {
   return {
-    findRepeaters: function(str) {
-      var chr, endPos, openBrackets, repeaters, startPos;
+    findModifiers: function(str, oBracket, cBracket) {
+      var chr, endPos, modifiers, openBrackets, startPos;
       endPos = -1;
-      repeaters = [];
+      modifiers = [];
       while (true) {
-        while (str.charAt(endPos + 1) !== "(" && endPos < str.length) {
+        while (str.charAt(endPos + 1) !== oBracket && endPos < str.length) {
           endPos++;
         }
         if (endPos === str.length) {
@@ -307,9 +307,9 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
         startPos = endPos;
         while (true) {
           chr = str.charAt(++endPos);
-          if (chr === "(") {
+          if (chr === oBracket) {
             openBrackets++;
-          } else if (chr === ")") {
+          } else if (chr === cBracket) {
             openBrackets--;
           }
           if (!(openBrackets > 0 && endPos < str.length)) {
@@ -319,15 +319,18 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
         if (endPos === str.length) {
           break;
         }
-        repeaters.push(str.substring(startPos + 2, endPos));
+        modifiers.push(str.substring(startPos + 2, endPos));
       }
-      return repeaters;
+      return modifiers;
     },
     repeatString: function(r) {
       var j, lastColon, rString, repeaters, _i, _len;
-      lastColon = r.lastIndexOf("x");
+      lastColon = r.lastIndexOf("/");
+      if (lastColon === -1) {
+        return;
+      }
       rString = r.substring(0, lastColon);
-      repeaters = this.findRepeaters(rString);
+      repeaters = this.findModifiers(rString, "(", ")");
       for (_i = 0, _len = repeaters.length; _i < _len; _i++) {
         j = repeaters[_i];
         rString = this.replaceRepeater(rString, j);
@@ -337,33 +340,51 @@ angular.module('carnatic.factories').factory("KorvaiHelper", function() {
     replaceRepeater: function(str, r) {
       return str.replace("(" + r + ")", this.repeatString(r));
     },
-    countMatras: function(korvai) {
-      var commas, dashes, korvaiWords, length, matras, r, repeaters, semicolons, vowels, word, _i, _j, _len, _len1;
-      repeaters = this.findRepeaters(korvai);
-      matras = 0;
-      for (_i = 0, _len = repeaters.length; _i < _len; _i++) {
-        r = repeaters[_i];
-        korvai = this.replaceRepeater(korvai, r);
+    repeaterMatras: function(r) {
+      return this.matrasWithoutModifiers(this.repeatString(r));
+    },
+    nadaiMatras: function(n) {
+      var lastSlash, nString;
+      lastSlash = n.lastIndexOf("/");
+      if (lastSlash === -1) {
+        return;
       }
+      nString = n.substring(0, lastSlash);
+      return this.countMatras(nString) * 4 / (parseInt(n.slice(lastSlash + 1)));
+    },
+    matrasWithoutModifiers: function(korvai) {
+      var commas, korvaiWords, matras, semicolons, vowels, word, _i, _len;
+      matras = 0;
       korvaiWords = korvai.replace(/(\r\n|\n|\r)/gm, ' ').split(' ');
-      for (_j = 0, _len1 = korvaiWords.length; _j < _len1; _j++) {
-        word = korvaiWords[_j];
+      for (_i = 0, _len = korvaiWords.length; _i < _len; _i++) {
+        word = korvaiWords[_i];
         vowels = word.match(/[aeiou]/g);
         if (vowels) {
-          length = vowels.length;
-          if (length === 1) {
-            matras += 1;
-          } else {
-            matras += length / 2;
-          }
+          matras += vowels.length;
         }
       }
-      dashes = korvai.match(/-/g);
-      matras += dashes ? dashes.length / 2 : 0;
       commas = korvai.match(/,/g);
       matras += commas ? commas.length : 0;
       semicolons = korvai.match(/;/g);
       matras += semicolons ? semicolons.length * 2 : 0;
+      return matras;
+    },
+    countMatras: function(korvai) {
+      var matras, n, nadais, r, repeaters, _i, _j, _len, _len1;
+      matras = 0;
+      nadais = this.findModifiers(korvai, "[", "]");
+      for (_i = 0, _len = nadais.length; _i < _len; _i++) {
+        n = nadais[_i];
+        matras += this.nadaiMatras(n);
+        korvai = korvai.replace("[" + n + "]", '');
+      }
+      repeaters = this.findModifiers(korvai, "(", ")");
+      for (_j = 0, _len1 = repeaters.length; _j < _len1; _j++) {
+        r = repeaters[_j];
+        matras += this.repeaterMatras(r);
+        korvai = korvai.replace("(" + r + ")", '');
+      }
+      matras += this.matrasWithoutModifiers(korvai);
       return matras;
     }
   };
