@@ -21,10 +21,8 @@ angular.module('carnatic.controllers')
         }, { remember: "sessionOnly" })
           .then (authData) ->
             REF.child("user_profiles").child(authData.uid).set
-              username: data.username
               name: data.name
-              email: data.email
-
+              
             $state.go 'tab.compose'
           .catch (error) ->
             alert "Authentication failed: #{error}"

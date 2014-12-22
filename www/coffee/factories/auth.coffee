@@ -20,6 +20,21 @@ angular.module('carnatic.factories')
       usersRef.child(authData.uid).once 'value', (snapshot) ->
         if not snapshot.val()?
           usersRef.child(authData.uid).set authData
+          userProfileRef = REF.child('user_profiles').child(authData.uid)
+          provider = authData.provider
+
+          if provider is "facebook"
+            userProfileRef.set
+              name: authData.facebook.displayName
+              picture: authData.facebook.cachedUserProfile.picture.data.url
+          else if provider is "google"
+            userProfileRef.set
+              name: authData.google.displayName
+              picture: authData.google.cachedUserProfile.picture
+          else
+            userProfileRef.set
+              email: authData.password.email
+              picture: "https://www.gravatar.com/avatar/#{CryptoJS.MD5(authData.password.email)}?d=retro"
 
   AuthFactory
 ]

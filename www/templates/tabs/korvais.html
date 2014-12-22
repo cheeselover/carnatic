@@ -2,8 +2,12 @@
   <ion-content class="padding">
     <h1>Korvais</h1><hr>
     <ion-list>
-      <ion-item ng-repeat="korvai in korvais">
-        {{korvai.content}}
+      <ion-item class="item-remove-animate item-icon-right" ng-repeat="korvai in korvais" href="#/tab/korvais/{{ korvai.$id }}">
+        Korvai #{{ $index + 1 }}:  {{ thalamString(korvai.thalam) + " thalam, " + korvai.mod + " matras after samam" }}
+
+        <ion-option-button class="button-assertive" ng-click="deleteKorvai(korvai)">
+          Delete
+        </ion-option-button>
       </ion-item>
     </ion-list>
   </ion-content>

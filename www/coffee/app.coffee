@@ -54,6 +54,13 @@ angular.module('carnatic', [
         templateUrl: 'templates/tabs/korvais.html'
         controller: 'KorvaisCtrl'
 
+  }).state('tab.korvai-detail', {
+    url: '/korvais/:korvaiId'
+    views:
+      'tab-korvais':
+        templateUrl: 'templates/tabs/korvai-detail.html'
+        controller: 'KorvaiDetailCtrl'
+
   }).state('tab.account', {
     url: '/account'
     views:

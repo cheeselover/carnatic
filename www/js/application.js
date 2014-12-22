@@ -49,6 +49,14 @@ angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnat
           controller: 'KorvaisCtrl'
         }
       }
+    }).state('tab.korvai-detail', {
+      url: '/korvais/:korvaiId',
+      views: {
+        'tab-korvais': {
+          templateUrl: 'templates/tabs/korvai-detail.html',
+          controller: 'KorvaiDetailCtrl'
+        }
+      }
     }).state('tab.account', {
       url: '/account',
       views: {
@@ -73,9 +81,11 @@ String.prototype.repeat = function(num) {
   return new Array(num + 1).join(this);
 };
 
-angular.module('carnatic.controllers').controller("AccountCtrl", function($scope) {
-  return "placeholder";
-});
+angular.module('carnatic.controllers').controller("AccountCtrl", [
+  '$scope', 'Auth', function($scope, Auth) {
+    return $scope.userProfile = Auth.user.userProfile();
+  }
+]);
 
 angular.module('carnatic.controllers').controller("ComposeCtrl", [
   '$scope', 'Auth', 'KorvaiHelper', function($scope, Auth, KorvaiHelper) {
@@ -97,9 +107,32 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
 
 angular.module('carnatic.controllers').controller("KorvaisCtrl", [
   '$scope', 'Auth', function($scope, Auth) {
-    var user;
-    user = Auth.user;
-    return $scope.korvais = user.korvais();
+    $scope.thalamString = function(matras) {
+      switch (matras) {
+        case 32:
+          return "adi";
+        case 12:
+          return "rupaka";
+        case 14:
+          return "misra chapu";
+        case 10:
+          return "kanda chapu";
+        default:
+          return "unknown";
+      }
+    };
+    $scope.korvais = Auth.user.korvais();
+    return $scope.deleteKorvai = function(korvai) {
+      return $scope.korvais.$remove(korvai);
+    };
+  }
+]).controller("KorvaiDetailCtrl", [
+  '$scope', '$stateParams', 'Auth', function($scope, $stateParams, Auth) {
+    var korvais;
+    korvais = Auth.user.korvais();
+    return korvais.$loaded().then(function() {
+      return $scope.korvai = korvais.$getRecord($stateParams.korvaiId);
+    });
   }
 ]);
 
@@ -169,9 +202,7 @@ angular.module('carnatic.controllers').controller("RegisterCtrl", [
             remember: "sessionOnly"
           }).then(function(authData) {
             REF.child("user_profiles").child(authData.uid).set({
-              username: data.username,
-              name: data.name,
-              email: data.email
+              name: data.name
             });
             return $state.go('tab.compose');
           })["catch"](function(error) {
@@ -280,8 +311,27 @@ angular.module('carnatic.factories').factory("Auth", [
         AuthFactory.currentUser = authData;
         AuthFactory.user = new User(authData.uid);
         return usersRef.child(authData.uid).once('value', function(snapshot) {
+          var provider, userProfileRef;
           if (snapshot.val() == null) {
-            return usersRef.child(authData.uid).set(authData);
+            usersRef.child(authData.uid).set(authData);
+            userProfileRef = REF.child('user_profiles').child(authData.uid);
+            provider = authData.provider;
+            if (provider === "facebook") {
+              return userProfileRef.set({
+                name: authData.facebook.displayName,
+                picture: authData.facebook.cachedUserProfile.picture.data.url
+              });
+            } else if (provider === "google") {
+              return userProfileRef.set({
+                name: authData.google.displayName,
+                picture: authData.google.cachedUserProfile.picture
+              });
+            } else {
+              return userProfileRef.set({
+                email: authData.password.email,
+                picture: "https://www.gravatar.com/avatar/" + (CryptoJS.MD5(authData.password.email)) + "?d=retro"
+              });
+            }
           }
         });
       }
@@ -398,13 +448,23 @@ angular.module('carnatic.models').factory("KorvaiList", function($firebase) {
   };
 });
 
+angular.module('carnatic.models').factory("UserProfile", function($firebase) {
+  return function(userId) {
+    return $firebase(new Firebase("https://carnatic.firebaseio.com/user_profiles/" + userId)).$asObject();
+  };
+});
+
 angular.module('carnatic.models').factory("User", [
-  '$firebase', 'KorvaiList', function($firebase, KorvaiList) {
+  '$firebase', 'KorvaiList', 'UserProfile', function($firebase, KorvaiList, UserProfile) {
     var User;
     return User = (function() {
       function User(userId) {
         this.userId = userId;
       }
+
+      User.prototype.userProfile = function() {
+        return new UserProfile(this.userId);
+      };
 
       User.prototype.korvais = function() {
         return new KorvaiList(this.userId);
