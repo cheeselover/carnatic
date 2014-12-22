@@ -46,7 +46,12 @@ angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnat
       views: {
         'tab-korvais': {
           templateUrl: 'templates/tabs/korvais.html',
-          controller: 'KorvaisCtrl'
+          controller: 'KorvaisCtrl',
+          resolve: {
+            korvais: function(Auth) {
+              return Auth.user.korvais();
+            }
+          }
         }
       }
     }).state('tab.korvai-detail', {
@@ -54,7 +59,17 @@ angular.module('carnatic', ['ionic', 'firebase', 'carnatic.controllers', 'carnat
       views: {
         'tab-korvais': {
           templateUrl: 'templates/tabs/korvai-detail.html',
-          controller: 'KorvaiDetailCtrl'
+          controller: 'KorvaiDetailCtrl',
+          resolve: {
+            korvai: function($stateParams, $q, Auth) {
+              var deferred;
+              deferred = $q.defer();
+              deferred.resolve(Auth.user.korvais().then(function(korvais) {
+                return korvais.$getRecord($stateParams.korvaiId);
+              }));
+              return deferred.promise;
+            }
+          }
         }
       }
     }).state('tab.account', {
@@ -91,7 +106,9 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
   '$scope', 'Auth', 'KorvaiHelper', function($scope, Auth, KorvaiHelper) {
     $scope.createKorvai = function(korvai) {
       if (korvai.content !== "") {
-        return Auth.user.korvais().$add(korvai);
+        return Auth.user.korvais().then(function(korvais) {
+          return korvais.$add(korvai);
+        });
       }
     };
     $scope.countMatras = function(content) {
@@ -106,7 +123,7 @@ angular.module('carnatic.controllers').controller("ComposeCtrl", [
 ]);
 
 angular.module('carnatic.controllers').controller("KorvaisCtrl", [
-  '$scope', 'Auth', function($scope, Auth) {
+  '$scope', 'korvais', function($scope, korvais) {
     $scope.thalamString = function(matras) {
       switch (matras) {
         case 32:
@@ -121,18 +138,14 @@ angular.module('carnatic.controllers').controller("KorvaisCtrl", [
           return "unknown";
       }
     };
-    $scope.korvais = Auth.user.korvais();
+    $scope.korvais = korvais;
     return $scope.deleteKorvai = function(korvai) {
       return $scope.korvais.$remove(korvai);
     };
   }
 ]).controller("KorvaiDetailCtrl", [
-  '$scope', '$stateParams', 'Auth', function($scope, $stateParams, Auth) {
-    var korvais;
-    korvais = Auth.user.korvais();
-    return korvais.$loaded().then(function() {
-      return $scope.korvai = korvais.$getRecord($stateParams.korvaiId);
-    });
+  '$scope', 'korvai', function($scope, korvai) {
+    return $scope.korvai = korvai;
   }
 ]);
 
@@ -455,7 +468,7 @@ angular.module('carnatic.models').factory("UserProfile", function($firebase) {
 });
 
 angular.module('carnatic.models').factory("User", [
-  '$firebase', 'KorvaiList', 'UserProfile', function($firebase, KorvaiList, UserProfile) {
+  '$firebase', '$q', 'KorvaiList', 'UserProfile', function($firebase, $q, KorvaiList, UserProfile) {
     var User;
     return User = (function() {
       function User(userId) {
@@ -467,7 +480,7 @@ angular.module('carnatic.models').factory("User", [
       };
 
       User.prototype.korvais = function() {
-        return new KorvaiList(this.userId);
+        return new KorvaiList(this.userId).$loaded();
       };
 
       return User;

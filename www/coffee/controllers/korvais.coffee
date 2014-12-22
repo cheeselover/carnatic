@@ -3,7 +3,7 @@
 
 angular.module('carnatic.controllers')
 
-.controller "KorvaisCtrl", ['$scope', 'Auth', ($scope, Auth) ->
+.controller "KorvaisCtrl", ['$scope', 'korvais', ($scope, korvais) ->
   $scope.thalamString = (matras) ->
     switch matras
       when 32 then "adi"
@@ -12,14 +12,12 @@ angular.module('carnatic.controllers')
       when 10 then "kanda chapu"
       else "unknown"
 
-  $scope.korvais = Auth.user.korvais()
+  $scope.korvais = korvais
 
   $scope.deleteKorvai = (korvai) ->
     $scope.korvais.$remove(korvai)  
 ]
 
-.controller "KorvaiDetailCtrl", ['$scope', '$stateParams', 'Auth', ($scope, $stateParams, Auth) ->
-  korvais = Auth.user.korvais()
-  korvais.$loaded().then ->
-    $scope.korvai = korvais.$getRecord($stateParams.korvaiId)
+.controller "KorvaiDetailCtrl", ['$scope', 'korvai', ($scope, korvai) ->
+  $scope.korvai = korvai
 ]

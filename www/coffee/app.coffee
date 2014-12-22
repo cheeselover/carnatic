@@ -53,6 +53,9 @@ angular.module('carnatic', [
       'tab-korvais':
         templateUrl: 'templates/tabs/korvais.html'
         controller: 'KorvaisCtrl'
+        resolve:
+          korvais: (Auth) ->
+            Auth.user.korvais()
 
   }).state('tab.korvai-detail', {
     url: '/korvais/:korvaiId'
@@ -60,6 +63,12 @@ angular.module('carnatic', [
       'tab-korvais':
         templateUrl: 'templates/tabs/korvai-detail.html'
         controller: 'KorvaiDetailCtrl'
+        resolve:
+          korvai: ($stateParams, $q, Auth) ->
+            deferred = $q.defer()
+            deferred.resolve(Auth.user.korvais().then (korvais) ->
+              korvais.$getRecord($stateParams.korvaiId))
+            return deferred.promise
 
   }).state('tab.account', {
     url: '/account'
