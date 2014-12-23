@@ -10,21 +10,21 @@ angular.module('carnatic.controllers')
       password: data.password
     }, { remember: "sessionOnly" })
       .then (authData) ->
-        $state.go 'tab.compose'
+        $state.go 'app.compose'
       .catch (error) ->
         alert "Authentication failed: #{error}"
 
   $scope.loginWithFacebook = ->
     Auth.loginOAuth('facebook', { remember: "sessionOnly" })
       .then (authData) ->
-        $state.go 'tab.compose'
+        $state.go 'app.compose'
       .catch (error) ->
         alert "Authentication failed: #{error}"
 
   $scope.loginWithGoogle = ->
     Auth.loginOAuth('google', { remember: "sessionOnly" })
       .then (authData) ->
-        $state.go 'tab.compose'
+        $state.go 'app.compose'
       .catch (error) ->
         alert "Authentication failed: #{error}"
 

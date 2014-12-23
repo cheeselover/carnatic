@@ -38,8 +38,8 @@ angular.module('carnatic.directives')
 
       # Add the foreground arc in orange, currently showing 12.7%.
       foreground = svg.append("path")
-          .datum({ endAngle: .127 * tau })
-          .style("fill", "orange")
+          .datum({ endAngle: tau })
+          .style("fill", "green")
           .attr("d", arc)
 
       updateTween = (val, thalam, mod) ->

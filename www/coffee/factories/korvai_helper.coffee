@@ -49,7 +49,13 @@ angular.module('carnatic.factories')
       for j in repeaters
         rString = @replaceRepeater(rString, j)
 
-      return rString.repeat(parseInt(r.slice(lastColon + 1)))
+      numOfRepeats = parseInt(r.slice(lastColon + 1))
+
+      try
+        return rString.repeat(numOfRepeats)
+      catch e
+        alert("ERROR: Invalid repeater syntax.")
+        return rString
 
     # replaceRepeater(str, r) replaces the occurrences of the repeater
     # in the given string

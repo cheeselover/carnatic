@@ -23,7 +23,7 @@ angular.module('carnatic.controllers')
             REF.child("user_profiles").child(authData.uid).set
               name: data.name
               
-            $state.go 'tab.compose'
+            $state.go 'app.compose'
           .catch (error) ->
             alert "Authentication failed: #{error}"
 

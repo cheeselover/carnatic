@@ -1,5 +1,5 @@
 angular.module('carnatic.models')
 
-.factory "KorvaiList", ($firebase) ->
+.factory "KorvaiList", ($firebase, REF) ->
   (userId) ->
-    $firebase(new Firebase("https://carnatic.firebaseio.com/korvais/#{userId}")).$asArray()
+    $firebase(REF.child('korvais').child(userId)).$asArray()

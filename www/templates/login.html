@@ -1,5 +1,5 @@
-<ion-view title="Login">
-  <ion-content padding="true" scroll="false">
+<ion-view title="Register New Account">
+  <ion-content padding="true" scroll="false" id="login">
     <div ng-show="user">
       <h2>You're logged in!</h2>
       <button class="button button-assertive" ng-click="logout()">Logout</button>
@@ -16,10 +16,10 @@
         <button class="button button-block button-balanced" type="submit">Login</button>
       </form><br>
 
-      <h2>Alternatively, log in with...<br>
+      <h2>Alternatively, log in with...</h2><br>
       <button class="button button-positive" ng-click="loginWithFacebook()">Facebook</button><br><br>
       <button class="button button-energized" ng-click="loginWithGoogle()">Google</button><br><br>
-      <a href="/#/register">Don't have an account?</a>
+      <a href="#/register">Don't have an account?</a>
     </div>
   </ion-content>
 </ion-view>

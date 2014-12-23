@@ -7,7 +7,7 @@ angular.module('carnatic', [
   'carnatic.directives'
 ])
 
-.run ['$ionicPlatform', '$rootScope', '$state', 'Auth', ($ionicPlatform, $rootScope, $state, Auth) ->
+.run ['$ionicPlatform', '$rootScope', 'Auth', ($ionicPlatform, $rootScope, Auth) ->
   $ionicPlatform.ready ->
     if window.cordova and window.cordova.plugins.Keyboard
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
@@ -16,15 +16,13 @@ angular.module('carnatic', [
       StatusBar.styleDefault()
 
   $rootScope.$on '$stateChangeStart', (event, toState) ->
-    if toState.name.substring(0, 3) is 'tab'
+    if toState.name.substring(0, 3) is 'app'
       Auth.authRef.$waitForAuth().then (user) ->
         if not user?
-          $state.go 'login'
+          location.href = "/#/login"
 ]
 
 .config ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) ->
-  $urlRouterProvider.otherwise('/tab/compose')
-
   $stateProvider.state('login', {
     url: '/login'
     templateUrl: 'templates/login.html'
@@ -35,33 +33,36 @@ angular.module('carnatic', [
     templateUrl: 'templates/register.html'
     controller: 'RegisterCtrl'
 
-  }).state('tab', {
-    url: '/tab'
+  }).state('app', {
+    url: '/app'
     abstract: true
-    templateUrl: 'templates/tabs/tabs.html'
+    templateUrl: 'templates/sidemenu/menu.html'
 
-  }).state('tab.compose', {
+  }).state('app.compose', {
     url: '/compose'
     views:
-      'tab-compose':
-        templateUrl: 'templates/tabs/compose.html'
+      'menuContent':
+        templateUrl: 'templates/sidemenu/compose.html'
         controller: 'ComposeCtrl'
+        resolve:
+          korvais: (Auth) ->
+            Auth.user.korvais()
 
-  }).state('tab.korvais', {
+  }).state('app.korvais', {
     url: '/korvais'
     views:
-      'tab-korvais':
-        templateUrl: 'templates/tabs/korvais.html'
+      'menuContent':
+        templateUrl: 'templates/sidemenu/korvais.html'
         controller: 'KorvaisCtrl'
         resolve:
           korvais: (Auth) ->
             Auth.user.korvais()
 
-  }).state('tab.korvai-detail', {
+  }).state('app.korvai-detail', {
     url: '/korvais/:korvaiId'
     views:
-      'tab-korvais':
-        templateUrl: 'templates/tabs/korvai-detail.html'
+      'menuContent':
+        templateUrl: 'templates/sidemenu/korvai-detail.html'
         controller: 'KorvaiDetailCtrl'
         resolve:
           korvai: ($stateParams, $q, Auth) ->
@@ -70,13 +71,18 @@ angular.module('carnatic', [
               korvais.$getRecord($stateParams.korvaiId))
             return deferred.promise
 
-  }).state('tab.account', {
+  }).state('app.account', {
     url: '/account'
     views:
-      'tab-account':
-        templateUrl: 'templates/tabs/account.html'
+      'menuContent':
+        templateUrl: 'templates/sidemenu/account.html'
         controller: 'AccountCtrl'
+        resolve:
+          userProfile: (Auth) ->
+            Auth.user.userProfile()
   })
+
+  $urlRouterProvider.otherwise('/app/compose')
 ]
 
 # Global values

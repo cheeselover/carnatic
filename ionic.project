@@ -2,8 +2,8 @@
   "name": "carnatic",
   "app_id": "",
   "gulpStartupTasks": [
-    "sass",
     "coffee",
+    "sass",
     "watch"
   ],
   "watchPatterns": [
