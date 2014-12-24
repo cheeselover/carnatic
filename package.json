@@ -1,7 +1,7 @@
 {
-  "name": "carnatic-new",
+  "name": "carnatic",
   "version": "1.0.0",
-  "description": "carnatic-new: An Ionic project",
+  "description": "carnatic:  A mridangam app for korvais",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",

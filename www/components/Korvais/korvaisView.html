@@ -1,0 +1,14 @@
+<ion-view title="Korvais">
+  <ion-content class="padding">
+    <h1>Korvais</h1><hr>
+    <ion-list>
+      <ion-item 
+      class="item-remove-animate item-icon-right" 
+      ng-repeat="korvai in korvais" 
+      href="/#/app/korvais/{{ korvai.$id }}"
+      on-hold="showActions(korvai)">
+        Korvai #{{ $index + 1 }}:  {{ thalamString(korvai.thalam) + " thalam, " + korvai.mod + " matras after samam" }}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
