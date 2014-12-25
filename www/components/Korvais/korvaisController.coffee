@@ -3,8 +3,8 @@
 
 angular.module('carnatic.controllers')
 
-.controller "KorvaisCtrl", ['$scope', '$ionicActionSheet', '$ionicModal', 'korvais', 
-($scope, $ionicActionSheet, $ionicModal, korvais) ->
+.controller "KorvaisCtrl", ['$scope', '$ionicActionSheet', '$ionicModal', 'Auth', 'KorvaiList', 'korvais', 
+($scope, $ionicActionSheet, $ionicModal, Auth, KorvaiList, korvais) ->
   $scope.korvais = korvais
 
   $ionicModal.fromTemplateUrl('components/Korvais/shareKorvaiModal.html', {
@@ -13,16 +13,33 @@ angular.module('carnatic.controllers')
   }).then (modal) ->
     $scope.modal = modal
 
-  openShareModal = ->
-    $scope.modal.show()
+  openShareModal = (korvai) ->
+    $scope.korvai = korvai
+    Auth.user.friends().then (friends) ->
+      $scope.friends = friends
+      $scope.modal.show()
+
+  $scope.friendClicked = ($index) ->
+    $scope.friendSelected = $index
+
+  $scope.share = ->
+    new KorvaiList($scope.friends[$scope.friendSelected].$value).$loaded().then (korvais) ->
+      korvais.$add $scope.korvai
 
   $scope.thalamString = (matras) ->
+    thalam = ""
     switch matras
-      when 32 then "adi"
-      when 12 then "rupaka"
-      when 14 then "misra chapu"
-      when 10 then "kanda chapu"
-      else "unknown"
+      when 32 then thalam = "adi"
+      when 12 then thalam = "rupaka"
+      when 14 then thalam = "misra chapu"
+      when 10 then thalam = "kanda chapu"
+      else thalam = "unknown"
+
+    return thalam + " thalam, "
+
+  $scope.modString = (mod) ->
+    afterOrBefore = if mod < 0 then " after" else " before"
+    return Math.abs(mod).toString() + afterOrBefore + " samam"
 
   $scope.showActions = (korvai) ->
     $ionicActionSheet.show
@@ -37,7 +54,7 @@ angular.module('carnatic.controllers')
         true
 
       buttonClicked: (index) ->
-        if index is 0 then openShareModal()
+        if index is 0 then openShareModal(korvai)
         true
 ]
 

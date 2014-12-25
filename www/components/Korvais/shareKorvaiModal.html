@@ -1,19 +1,17 @@
 <div class="modal">
   <ion-header-bar>
-    <h1 class="title">Edit Contact</h1>
+    <h1 class="title">Share Korvai</h1>
   </ion-header-bar>
-  <ion-content>
-    <div class="list">
-      <label class="item item-input">
-        <span class="input-label">Name</span>
-        <input type="text" ng-model="contact.name">
-      </label>
-      <label class="item item-input">
-        <span class="input-label">Info</span>
-        <input type="text" ng-model="contact.info">
-      </label>
-    </div>
+  <ion-content class="padding">
+    <ion-list>
+      <ion-item 
+      ng-class="{ 'activated': $index == friendSelected }" 
+      ng-repeat="friend in friends" 
+      ng-click="friendClicked($index)">
+        {{ friend.$value }}
+      </ion-item>
+    </ion-list>
 
-    <button class="button button-full button-energized" ng-click="closeModal()">Done</button>
+    <button class="button button-full button-royal" ng-click="share()">Share</button>
   </ion-content>
 </div>

@@ -24,15 +24,15 @@ angular.module('carnatic.factories')
           provider = authData.provider
 
           if provider is "facebook"
-            userProfileRef.set
+            userProfileRef.update
               name: authData.facebook.displayName
               picture: authData.facebook.cachedUserProfile.picture.data.url
           else if provider is "google"
-            userProfileRef.set
+            userProfileRef.update
               name: authData.google.displayName
               picture: authData.google.cachedUserProfile.picture
           else
-            userProfileRef.set
+            userProfileRef.update
               email: authData.password.email
               picture: "https://www.gravatar.com/avatar/#{CryptoJS.MD5(authData.password.email)}?d=retro"
 

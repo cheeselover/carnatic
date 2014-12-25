@@ -1,8 +1,9 @@
 angular.module('carnatic.directives')
 
-.directive 'textareaAutosize', ->
+.directive 'textareaAutosize', ($document) ->
   return {
     restrict: 'A'
     link: (scope, element, attrs) ->
-      $(element[0]).autosize()
+      $document.ready ->
+        $(element[0]).autosize()
   }

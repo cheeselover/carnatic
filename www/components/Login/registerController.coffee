@@ -18,14 +18,12 @@ angular.module('carnatic.controllers')
         Auth.loginEmail({
           email: data.email
           password: data.password
-        }, { remember: "sessionOnly" })
-          .then (authData) ->
-            REF.child("user_profiles").child(authData.uid).set
-              name: data.name
-              
-            $state.go 'app.compose'
-          .catch (error) ->
-            alert "Authentication failed: #{error}"
+        }, { remember: "sessionOnly" }).then (authData) ->
+          REF.child("user_profiles").child(authData.uid).update { name: data.name }          
+          $state.go 'app.compose'
+
+      .catch (error) ->
+        alert "Authentication failed: #{error}"
 
     else
       alert "Password did not match confirmation."
