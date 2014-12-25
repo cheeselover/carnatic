@@ -1,9 +1,31 @@
 <ion-view title="Account">
   <ion-content class="padding">
     <h1>Account</h1><hr>
-    <h2>Name:  {{ userProfile.name }}</h2>
-    <h2>Email:  {{ userProfile.email || "DOESN'T EXIST"}}</h2>
     <h2>Picture:  </h2><img ng-src="{{ userProfile.picture }}" />
+
+    <form ng-submit="updateProfile(userProfile)">
+      <h3>Name:  </h3>
+      <label class="item item-input">
+        <input type="text" placeholder="Full Name" value="{{ userProfile.name }}" ng-model="userProfile.name">
+      </label>
+
+      <h3>Email:  </h3>
+      <label class="item item-input">
+        <input type="email" placeholder="Email" value="{{ userProfile.email }}" ng-model="userProfile.email">
+      </label>
+      
+      <h3>Am I a public user?
+        <label class="toggle">
+          <input type="checkbox" ng-model="userProfile.is_public">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </h3>
+
+      <button class="button button-block button-calm" type="submit">Update Profile</button>
+    </form>
+
     <h2><u>Friends</u></h2><hr>
     <ion-list>
       <ion-item ng-repeat="friend in friends">

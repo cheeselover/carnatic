@@ -19,7 +19,10 @@ angular.module('carnatic.controllers')
           email: data.email
           password: data.password
         }, { remember: "sessionOnly" }).then (authData) ->
-          REF.child("user_profiles").child(authData.uid).update { name: data.name }          
+          userProfileRef = REF.child("user_profiles").child(authData.uid)
+          userProfileRef.update { name: data.name }
+          userProfileRef.setPriority("public")
+
           $state.go 'app.compose'
 
       .catch (error) ->

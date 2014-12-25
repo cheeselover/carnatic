@@ -1,0 +1,12 @@
+<ion-view title="Search Users">
+  <ion-content class="padding">
+    <h1>Public Users</h1><hr>
+    <ion-list>
+      <ion-item class="item item-avatar" ng-repeat="userProfile in userProfiles">
+        <img src="{{ userProfile.picture }}">
+        <h2>{{ userProfile.name }}</h2>
+        <p>{{ userProfile.email }}</p>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

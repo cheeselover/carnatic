@@ -61,6 +61,16 @@ angular.module('carnatic')
 
           friends: (Auth) ->
             Auth.user.friends()
+
+  }).state('app.search', {
+    url: '/search'
+    views:
+      'menuContent':
+        templateUrl: 'components/Search/searchView.html'
+        controller: 'SearchCtrl'
+        resolve:
+          userProfiles: (UserProfileList) ->
+            new UserProfileList("public").$loaded()
   })
 
   $urlRouterProvider.otherwise('/app/compose')
