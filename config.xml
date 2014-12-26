@@ -3,7 +3,7 @@
   <name>carnatic</name>
   <description>A carnatic music app for mridangam korvais.</description>
   <author email="siva.mahadevan1@gmail.com">Siva Mahadevan</author>
-  <content src="public/index.html"/>
+  <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
