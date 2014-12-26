@@ -3,8 +3,7 @@
 
 angular.module('carnatic.controllers')
 
-.controller "KorvaisCtrl", ['$scope', '$ionicActionSheet', '$ionicModal', 'Auth', 'KorvaiList', 'korvais', 
-($scope, $ionicActionSheet, $ionicModal, Auth, KorvaiList, korvais) ->
+.controller "KorvaisCtrl", ($scope, $ionicActionSheet, $ionicModal, Auth, KorvaiList, korvais) ->
   $scope.korvais = korvais
 
   $ionicModal.fromTemplateUrl('components/Korvais/shareKorvaiModal.html', {
@@ -56,8 +55,6 @@ angular.module('carnatic.controllers')
       buttonClicked: (index) ->
         if index is 0 then openShareModal(korvai)
         true
-]
 
-.controller "KorvaiDetailCtrl", ['$scope', 'korvai', ($scope, korvai) ->
+.controller "KorvaiDetailCtrl", ($scope, korvai) ->
   $scope.korvai = korvai
-]

@@ -6,6 +6,9 @@
         <img src="{{ userProfile.picture }}">
         <h2>{{ userProfile.name }}</h2>
         <p>{{ userProfile.email }}</p>
+        <ion-option-button class="button-royal" ng-click="addFriend(userProfile)">
+          Add Friend
+        </ion-option-button>
       </ion-item>
     </ion-list>
   </ion-content>

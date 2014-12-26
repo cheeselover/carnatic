@@ -1,6 +1,6 @@
 angular.module('carnatic')
 
-.config ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) ->
+.config ($stateProvider, $urlRouterProvider) ->
   $stateProvider.state('login', {
     url: '/login'
     templateUrl: 'components/Login/loginView.html'
@@ -74,4 +74,3 @@ angular.module('carnatic')
   })
 
   $urlRouterProvider.otherwise('/app/compose')
-]

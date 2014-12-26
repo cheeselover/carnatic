@@ -1,6 +1,6 @@
 angular.module('carnatic.factories')
 
-.factory "Auth", ['$firebaseAuth', 'User', 'REF', ($firebaseAuth, User, REF) ->
+.factory "Auth", ($firebaseAuth, User, REF) ->
   authRef = $firebaseAuth REF
   usersRef = REF.child 'users'
 
@@ -37,4 +37,3 @@ angular.module('carnatic.factories')
               picture: "https://www.gravatar.com/avatar/#{CryptoJS.MD5(authData.password.email)}?d=retro"
 
   AuthFactory
-]

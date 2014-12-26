@@ -1,6 +1,6 @@
 angular.module('carnatic.controllers')
 
-.controller "ComposeCtrl", ['$scope', 'KorvaiHelper', 'korvais', ($scope, KorvaiHelper, korvais) ->
+.controller "ComposeCtrl", ($scope, KorvaiHelper, korvais) ->
   $scope.createKorvai = (korvai) ->
     if korvai.content isnt ""
       korvai.thalam = parseInt korvai.thalam
@@ -16,4 +16,3 @@ angular.module('carnatic.controllers')
     mod: 0
 
   $scope.matras = 32
-]

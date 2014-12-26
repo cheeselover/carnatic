@@ -1,6 +1,6 @@
 angular.module('carnatic.controllers')
 
-.controller "LoginCtrl", ['$scope', '$state', 'Auth', ($scope, $state, Auth) ->
+.controller "LoginCtrl", ($scope, $state, Auth) ->
   $scope.auth = Auth
   $scope.user = $scope.auth.currentUser
 
@@ -31,4 +31,3 @@ angular.module('carnatic.controllers')
   $scope.logout = ->
     $scope.auth.logout()
     location.reload()
-]

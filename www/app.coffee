@@ -7,7 +7,7 @@ angular.module('carnatic', [
   'carnatic.directives'
 ])
 
-.run ['$ionicPlatform', '$rootScope', 'Auth', ($ionicPlatform, $rootScope, Auth) ->
+.run ($ionicPlatform, $rootScope, Auth) ->
   $ionicPlatform.ready ->
     if window.cordova and window.cordova.plugins.Keyboard
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
@@ -24,7 +24,6 @@ angular.module('carnatic', [
   $rootScope.logout = ->
     Auth.logout()
     location.reload()
-]
 
 # Global values
 .value('REF', new Firebase("https://carnatic.firebaseio.com/"))

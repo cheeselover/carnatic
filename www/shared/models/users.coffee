@@ -1,7 +1,6 @@
 angular.module('carnatic.models')
 
-.factory "User", ['$firebase', 'KorvaiList', 'UserProfile', 'Friends',
-($firebase, KorvaiList, UserProfile, Friends) ->
+.factory "User", ($firebase, KorvaiList, UserProfile, Friends) ->
   class User
     constructor: (@userId) ->
     userProfile: ->
@@ -10,4 +9,3 @@ angular.module('carnatic.models')
       new KorvaiList(@userId).$loaded()
     friends: ->
       new Friends(@userId).$loaded()
-]

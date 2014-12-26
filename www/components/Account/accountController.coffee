@@ -1,6 +1,6 @@
 angular.module('carnatic.controllers')
 
-.controller "AccountCtrl", ['$scope', 'userProfile', 'friends', ($scope, userProfile, friends) ->
+.controller "AccountCtrl", ($scope, userProfile, friends) ->
   $scope.userProfile = userProfile
   $scope.friends = friends
 
@@ -11,4 +11,3 @@ angular.module('carnatic.controllers')
       alert "Updated profile!"
     else
       alert "Name cannot be blank."
-]

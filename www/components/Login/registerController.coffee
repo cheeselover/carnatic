@@ -1,6 +1,6 @@
 angular.module('carnatic.controllers')
 
-.controller "RegisterCtrl", ['$scope', '$state', 'Auth', 'REF', ($scope, $state, Auth, REF) ->
+.controller "RegisterCtrl", ($scope, $state, Auth, REF) ->
   $scope.register = (data) ->
     if data.password == data.password_confirm
       Auth.createUser(data.email, data.password).catch (error) ->
@@ -30,4 +30,3 @@ angular.module('carnatic.controllers')
 
     else
       alert "Password did not match confirmation."
-]
