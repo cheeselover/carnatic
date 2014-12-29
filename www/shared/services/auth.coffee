@@ -1,4 +1,4 @@
-angular.module('carnatic.factories')
+angular.module('carnatic.services')
 
 .factory "Auth", ($firebaseAuth, User, REF) ->
   authRef = $firebaseAuth REF

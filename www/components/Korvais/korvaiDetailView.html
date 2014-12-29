@@ -1,5 +1,6 @@
 <ion-view title="Korvai ID: {{ korvai.$id }}">
-  <ion-content class="padding">
-    <p>{{ korvai.content }}</p>
+  <ion-content class="padding" scroll="false">
+    <p>{{ korvai.content }}</p><hr>
+    <div ng-bind-html="htmlKorvai"></div>
   </ion-content>
 </ion-view>

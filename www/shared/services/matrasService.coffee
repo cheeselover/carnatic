@@ -1,6 +1,6 @@
-angular.module('carnatic.factories')
+angular.module('carnatic.services')
 
-.factory "KorvaiHelper", ->
+.factory "MatrasService", ->
   return {
     # findModifiers(str, oBracket, cBracket) produces an array of all the
     # content of the "modifiers" in the given korvai string, where a modifier
@@ -74,19 +74,16 @@ angular.module('carnatic.factories')
 
       @countMatras(nString, false) * 4 / (parseInt(n.slice(lastSlash + 1)))
 
+    wordMatras: (word) ->
+      vowels = word.match /[aeiou]/g
+      return if vowels then vowels.length else 0
+
     matrasWithoutModifiers: (korvai) ->
       matras = 0
       korvaiWords = korvai.replace(/(\r\n|\n|\r)/gm, ' ').split(' ')
 
       for word in korvaiWords
-        vowels = word.match /[aeiou]/g
-        if vowels
-          matras += vowels.length
-          # length = vowels.length
-          # if length is 1
-          #   matras += 2
-          # else
-          #   matras += length
+        matras += @wordMatras(word)
 
       commas = korvai.match /,/g
       matras += if commas then commas.length else 0

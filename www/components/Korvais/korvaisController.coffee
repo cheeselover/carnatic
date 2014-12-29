@@ -56,5 +56,6 @@ angular.module('carnatic.controllers')
         if index is 0 then openShareModal(korvai)
         true
 
-.controller "KorvaiDetailCtrl", ($scope, korvai) ->
+.controller "KorvaiDetailCtrl", ($scope, KorvaiRenderService, korvai) ->
   $scope.korvai = korvai
+  $scope.htmlKorvai = KorvaiRenderService.renderHTML korvai.content

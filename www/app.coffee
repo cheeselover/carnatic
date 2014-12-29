@@ -2,7 +2,7 @@ angular.module('carnatic', [
   'ionic'
   'firebase'
   'carnatic.controllers'
-  'carnatic.factories'
+  'carnatic.services'
   'carnatic.models'
   'carnatic.directives'
 ])
@@ -30,10 +30,21 @@ angular.module('carnatic', [
 
 # Module definitions
 angular.module 'carnatic.controllers', []
-angular.module 'carnatic.factories', []
+angular.module 'carnatic.services', []
 angular.module 'carnatic.models', []
 angular.module 'carnatic.directives', []
 
 # Miscellaneous helpers
 String.prototype.repeat = (num) ->
   new Array(num + 1).join(@)
+
+String.prototype.replaceAll = (find, replace) ->
+  @replace(new RegExp(find, 'g'), replace)
+
+Array.prototype.removeDuplicates = ->
+  @reduce (accum, current) ->
+    if accum.indexOf(current) < 0
+      accum.push current
+
+    return accum;
+  , []

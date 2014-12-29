@@ -1,6 +1,6 @@
 angular.module('carnatic.controllers')
 
-.controller "ComposeCtrl", ($scope, KorvaiHelper, korvais) ->
+.controller "ComposeCtrl", ($scope, MatrasService, korvais) ->
   $scope.createKorvai = (korvai) ->
     if korvai.content isnt ""
       korvai.thalam = parseInt korvai.thalam
@@ -8,7 +8,7 @@ angular.module('carnatic.controllers')
       korvais.$add korvai
 
   $scope.countMatras = (content) ->
-    $scope.matras = KorvaiHelper.countMatras(content, true)
+    $scope.matras = MatrasService.countMatras(content, true)
 
   $scope.korvai =
     content: "thathinkinathom,\n(thathinkinathom /2),\n(thathinkinathom /3)"
