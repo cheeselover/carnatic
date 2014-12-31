@@ -1,6 +1,7 @@
 angular.module('carnatic', [
   'ionic'
   'firebase'
+  'contenteditable'
   'carnatic.controllers'
   'carnatic.services'
   'carnatic.models'

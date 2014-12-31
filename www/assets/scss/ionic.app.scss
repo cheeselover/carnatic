@@ -19,3 +19,19 @@ $ionicons-font-path: "/assets/lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/assets/lib/ionic/scss/ionic";
+
+#korvai-view {
+  font-family: "Crimson Text", serif;
+  font-size: 16pt;
+  line-height: 130%;
+
+  span.modifier-bracket {
+    font-family: arial;
+    font-weight: 100;
+    font-size: 20pt;
+  }
+}
+
+div[contenteditable] {
+  border: 1px solid;
+}

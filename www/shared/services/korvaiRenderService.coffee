@@ -15,7 +15,10 @@ angular.module('carnatic.services')
       for j in repeaters
         rString = @replaceRepeater(rString, j)
 
-      return "( #{rString} ) ×#{parseInt(r.slice(lastSlash + 1))} "
+      return "<span class=\"modifier-bracket\">(</span> 
+                #{rString} 
+              <span class=\"modifier-bracket\">)</span> 
+              ×#{parseInt(r.slice(lastSlash + 1))} "
 
     replaceRepeater: (str, r) ->
       str.replace("(#{r})", @convertRepeater(r))
@@ -25,7 +28,10 @@ angular.module('carnatic.services')
       if lastSlash is -1 then return
 
       nString = n.substring(0, lastSlash)
-      return "[ #{nString} ] → #{@numberToNadai(parseInt(n.slice(lastSlash + 1)))} "
+      return "<span class=\"modifier-bracket\">[</span> 
+                #{nString} 
+              <span class=\"modifier-bracket\">]</span> 
+              → #{@numberToNadai(parseInt(n.slice(lastSlash + 1)))} "
 
     numberToNadai: (num) ->
       switch num
@@ -38,28 +44,21 @@ angular.module('carnatic.services')
         when 9 then "sankeernam"
 
     korvaiToHTML: (korvai) ->
-      korvai = " #{korvai} "
-      repeaters = MatrasService.findModifiers(korvai, "(", ")")
-
-      for r in repeaters
-        korvai = korvai.replace("(#{r})", @convertRepeater(r))
-
-      # korvai = korvai.replaceAll("\n", " <br> ").replaceAll(",", " , ").replaceAll(";", " ; ")
-      # korvaiWords = korvai.split(" ").removeDuplicates().filter (word) ->
-      #   badChars = word.match(/[^a-z]/g)
-      #   return word isnt "" and (not badChars or badChars.length is 0)
       korvai = korvai.replaceAll(",", " , ").replaceAll(";", " ; ").replaceAll("\n", " \n ")
       korvaiWords = korvai.match(/([a-zA-Z]+)/g).removeDuplicates()
 
       for word in korvaiWords
-        korvai = korvai.replaceAll " #{word} ", " #{word}<sup>#{MatrasService.wordMatras(word)}</sup> "
+        korvai = korvai.replaceAll "\\b#{word}\\b", " #{word}<sup>#{MatrasService.wordMatras(word)}</sup> "
+
+      repeaters = MatrasService.findModifiers(korvai, "(", ")")
+      for r in repeaters
+        korvai = korvai.replace("(#{r})", @convertRepeater(r))
 
       nadais = MatrasService.findModifiers(korvai, "[", "]")
-
       for n in nadais
         korvai = korvai.replace("[#{n}]", @convertNadai(n))
 
-      korvai = korvai.replaceAll "\n", "<br>"
+      korvai = korvai.replaceAll("\n", "<br>")
 
       return korvai
   }

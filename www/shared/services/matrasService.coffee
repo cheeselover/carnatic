@@ -40,16 +40,16 @@ angular.module('carnatic.services')
     # and produces the repeated sequence as a string
     # e.g. (thathinkinathom /3) produces "thathinkinathom thathinkinathom thathinkinathom "
     repeatString: (r) ->
-      lastColon = r.lastIndexOf "/"
-      if lastColon is -1 then return
+      lastSlash = r.lastIndexOf "/"
+      if lastSlash is -1 then return
 
-      rString = r.substring(0, lastColon)
+      rString = r.substring(0, lastSlash)
       repeaters = @findModifiers(rString, "(", ")")
 
       for j in repeaters
         rString = @replaceRepeater(rString, j)
 
-      numOfRepeats = parseInt(r.slice(lastColon + 1))
+      numOfRepeats = parseInt(r.slice(lastSlash + 1))
 
       try
         return rString.repeat(numOfRepeats)
@@ -96,6 +96,10 @@ angular.module('carnatic.services')
     # countMatras(korvai) counts the number of matras in the korvai
     # TODO: this only works for 2nd speed
     countMatras: (korvai, hasNadais) ->
+      div = document.createElement("div")
+      div.innerHTML = korvai
+      korvai = div.textContent or div.innerText or ""
+
       matras = 0
 
       if hasNadais

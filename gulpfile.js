@@ -1,13 +1,12 @@
 var gulp = require('gulp');
-var gutil = require('gulp-util');
-var bower = require('bower');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
-var sh = require('shelljs');
 var coffee = require('gulp-coffee');
 var plumber = require('gulp-plumber');
+var uglify = require('gulp-uglify');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var paths = {
   sass: ['./www/assets/scss/**/*.scss'],
@@ -32,6 +31,12 @@ gulp.task('coffee', function(done) {
   gulp.src(paths.coffee)
     .pipe(plumber())
     .pipe(coffee())
+    .pipe(ngAnnotate({
+      remove: true,
+      add: true,
+      single_quotes: true
+    }))
+    .pipe(uglify())
     .pipe(concat('application.js'))
     .pipe(gulp.dest('./www/public/'))
     .on('end', done)

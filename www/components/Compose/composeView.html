@@ -1,11 +1,6 @@
 <ion-view title="Compose">
   <ion-content class="padding">
-    <form ng-submit="createKorvai(korvai)">
-      <label class="item item-input">
-        <textarea textarea-autosize ng-model="korvai.content" placeholder="Enter korvai here..."></textarea>
-      </label>
-
-    </form>
+    <div contenteditable quotation-replace class="padding" ng-model="korvai.content"></div>
     <button class="button button-block button-assertive" ng-click="countMatras(korvai.content)">Count matras</button>
     <button class="button button-block button-positive" ng-click="createKorvai(korvai)">UPLOAD</button>
 
