@@ -8,6 +8,6 @@
   ],
   "watchPatterns": [
     "www/**/*",
-    "!www/assets/lib/**/*"
+    "!www/lib/**/*"
   ]
 }

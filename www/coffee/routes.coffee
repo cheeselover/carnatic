@@ -3,24 +3,24 @@ angular.module('carnatic')
 .config ($stateProvider, $urlRouterProvider) ->
   $stateProvider.state('login', {
     url: '/login'
-    templateUrl: 'components/Login/loginView.html'
+    templateUrl: 'templates/loginView.html'
     controller: 'LoginCtrl'
 
   }).state('register', {
     url: '/register'
-    templateUrl: 'components/Login/registerView.html'
+    templateUrl: 'templates/registerView.html'
     controller: 'RegisterCtrl'
 
   }).state('app', {
     url: '/app'
     abstract: true
-    templateUrl: 'shared/Sidemenu/menu.html'
+    templateUrl: 'templates/menu.html'
 
   }).state('app.compose', {
     url: '/compose'
     views:
       'menuContent':
-        templateUrl: 'components/Compose/composeView.html'
+        templateUrl: 'templates/composeView.html'
         controller: 'ComposeCtrl'
         resolve:
           korvais: (Auth) ->
@@ -30,7 +30,7 @@ angular.module('carnatic')
     url: '/korvais'
     views:
       'menuContent':
-        templateUrl: 'components/Korvais/korvaisView.html'
+        templateUrl: 'templates/korvaisView.html'
         controller: 'KorvaisCtrl'
         resolve:
           korvais: (Auth) ->
@@ -40,7 +40,7 @@ angular.module('carnatic')
     url: '/korvais/:korvaiId'
     views:
       'menuContent':
-        templateUrl: 'components/Korvais/korvaiDetailView.html'
+        templateUrl: 'templates/korvaiDetailView.html'
         controller: 'KorvaiDetailCtrl'
         resolve:
           korvai: ($stateParams, $q, Auth) ->
@@ -53,7 +53,7 @@ angular.module('carnatic')
     url: '/account'
     views:
       'menuContent':
-        templateUrl: 'components/Account/accountView.html'
+        templateUrl: 'templates/accountView.html'
         controller: 'AccountCtrl'
         resolve:
           userProfile: (Auth) ->
@@ -66,7 +66,7 @@ angular.module('carnatic')
     url: '/search'
     views:
       'menuContent':
-        templateUrl: 'components/Search/searchView.html'
+        templateUrl: 'templates/searchView.html'
         controller: 'SearchCtrl'
         resolve:
           userProfiles: (UserProfileList) ->

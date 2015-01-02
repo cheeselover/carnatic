@@ -6,7 +6,7 @@ angular.module('carnatic.controllers')
 .controller "KorvaisCtrl", ($scope, $ionicActionSheet, $ionicModal, Auth, KorvaiList, korvais) ->
   $scope.korvais = korvais
 
-  $ionicModal.fromTemplateUrl('components/Korvais/shareKorvaiModal.html', {
+  $ionicModal.fromTemplateUrl('templates/shareKorvaiModal.html', {
     scope: $scope
     animation: 'slide-in-up'
   }).then (modal) ->

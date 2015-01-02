@@ -36,4 +36,9 @@ angular.module('carnatic.services')
               email: authData.password.email
               picture: "https://www.gravatar.com/avatar/#{CryptoJS.MD5(authData.password.email)}?d=retro"
 
+    else
+      AuthFactory.user = null
+      AuthFactory.currentUser = null
+      if window.cookies then window.cookies.clear()
+
   AuthFactory

@@ -9,21 +9,21 @@ var uglify = require('gulp-uglify');
 var ngAnnotate = require('gulp-ng-annotate');
 
 var paths = {
-  sass: ['./www/assets/scss/**/*.scss'],
+  sass: ['./scss/**/*.scss'],
   coffee: ['./www/**/*.coffee']
 };
 
 gulp.task('default', ['sass', 'coffee', 'watch']);
 
 gulp.task('sass', function(done) {
-  gulp.src('./www/assets/scss/ionic.app.scss')
+  gulp.src('./scss/ionic.app.scss')
     .pipe(plumber())
     .pipe(sass())
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/public/'))
+    .pipe(rename("style.css"))
+    .pipe(gulp.dest('./www/css'))
     .on('end', done);
 });
 
@@ -37,8 +37,8 @@ gulp.task('coffee', function(done) {
       single_quotes: true
     }))
     .pipe(uglify())
-    .pipe(concat('application.js'))
-    .pipe(gulp.dest('./www/public/'))
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest('./www/js'))
     .on('end', done)
 });
 
