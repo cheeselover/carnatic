@@ -8,7 +8,7 @@ angular.module('carnatic', [
   'carnatic.directives'
 ])
 
-.run ($ionicPlatform, $rootScope, Auth) ->
+.run ($ionicPlatform, $rootScope, $state, Auth) ->
   $ionicPlatform.ready ->
     if window.cordova and window.cordova.plugins.Keyboard
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
@@ -20,7 +20,7 @@ angular.module('carnatic', [
     if toState.name.substring(0, 3) is 'app'
       Auth.authRef.$waitForAuth().then (user) ->
         if not user?
-          location.href = "/#/login"
+          $state.go 'login'
 
   $rootScope.logout = ->
     Auth.logout()

@@ -19,7 +19,7 @@ angular.module('carnatic.controllers')
           email: data.email
           password: data.password
         }, { remember: "sessionOnly" }).then (authData) ->
-          userProfileRef = REF.child("user_profiles").child(authData.uid)
+          userProfileRef = REF.child("user_profiles/#{authData.uid}")
           userProfileRef.update { name: data.name }
           userProfileRef.setPriority("public")
 

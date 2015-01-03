@@ -2,7 +2,7 @@ angular.module('carnatic.models')
 
 .factory "UserProfile", ($firebase, REF) ->
   (userId) ->
-    $firebase(REF.child('user_profiles').child(userId)).$asObject()
+    $firebase(REF.child("user_profiles/#{userId}")).$asObject()
 
 .factory "UserProfileList", ($firebase, REF) ->
   (publicOrPrivate) ->

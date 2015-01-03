@@ -20,7 +20,7 @@ angular.module('carnatic.services')
       usersRef.child(authData.uid).once 'value', (snapshot) ->
         if not snapshot.val()?
           usersRef.child(authData.uid).set authData
-          userProfileRef = REF.child('user_profiles').child(authData.uid)
+          userProfileRef = REF.child("user_profiles/#{authData.uid}")
           provider = authData.provider
 
           if provider is "facebook"
@@ -36,9 +36,17 @@ angular.module('carnatic.services')
               email: authData.password.email
               picture: "https://www.gravatar.com/avatar/#{CryptoJS.MD5(authData.password.email)}?d=retro"
 
+      connectionRef = REF.child('.info/connected')
+      userPresenceRef = REF.child("presence/#{authData.uid}")
+
+      connectionRef.on 'value', (snapshot) ->
+        if snapshot.val()
+          userPresenceRef.onDisconnect().remove()
+          userPresenceRef.set true
+        else
+          alert "Disconnected!"
+
     else
-      AuthFactory.user = null
-      AuthFactory.currentUser = null
       if window.cookies then window.cookies.clear()
 
   AuthFactory
