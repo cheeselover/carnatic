@@ -1,19 +1,44 @@
-/*
-To customize the look and feel of Ionic, you can override the variables
-in ionic's _variables.scss file.
+$light:                           #ecf0f1 !default;
+$stable:                          #95a5a6 !default;
+$positive:                        #3498db !default;
+$calm:                            #1abc9c !default;
+$balanced:                        #2ecc71 !default;
+$energized:                       #f1c40f !default;
+$assertive:                       #e74c3c !default;
+$royal:                           #9b59b6 !default;
+$dark:                            #34495e !default;
 
-For example, you might change some of the default colors:
+//------------- flat ui colors -----------------
+$turquoise: #1abc9c;
+$turquoise-dark: #16a085;
 
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
-*/
+$green: #2ecc71;
+$green-dark: #27ae60;
+
+$blue: #3498db;
+$blue-dark: #2980b9;
+
+$purple: #9b59b6;
+$purple-dark: #8e44ad;
+
+$black: #34495e;
+$black-dark: #2c3e50;
+
+$yellow: #f1c40f;
+$yellow-dark: #f39c12;
+
+$orange: #e67e22;
+$orange-dark: #d35400;
+
+$red: #e74c3c;
+$red-dark: #c0392b;
+
+$white: #ecf0f1;
+$white-dark: #bdc3c7;
+
+$grey: #95a5a6;
+$grey-dark: #7f8c8d;
+//---------------------------------------------
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -35,4 +60,39 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 div[contenteditable] {
   border: 1px solid;
+}
+
+#login-view {
+  background-image: url('../img/mridangam_bg.jpg');
+  background-size: cover;
+
+  .card {
+    padding: 50px;
+    -webkit-box-shadow: 0px 0px 50px 20px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 50px 20px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 50px 20px rgba(0,0,0,0.75);
+    border-radius: 10px;
+    
+    background-color: $dark;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+
+    h2 { color: $light; }
+    h4 { color: $grey; }
+
+    button#login-button {
+      padding: 0px 30px;
+    }
+
+    .item-input {
+      border: 1px solid $calm;
+      background-color: lighten($dark, 10%);
+
+      input {
+        color: $light;
+      }
+    }
+  }
 }

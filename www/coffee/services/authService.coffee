@@ -36,15 +36,15 @@ angular.module('carnatic.services')
               email: authData.password.email
               picture: "https://www.gravatar.com/avatar/#{CryptoJS.MD5(authData.password.email)}?d=retro"
 
-      connectionRef = REF.child('.info/connected')
-      userPresenceRef = REF.child("presence/#{authData.uid}")
+      # connectionRef = REF.child('.info/connected')
+      # userPresenceRef = REF.child("presence/#{authData.uid}")
 
-      connectionRef.on 'value', (snapshot) ->
-        if snapshot.val()
-          userPresenceRef.onDisconnect().remove()
-          userPresenceRef.set true
-        else
-          alert "Disconnected!"
+      # connectionRef.on 'value', (snapshot) ->
+      #   if snapshot.val()
+      #     userPresenceRef.onDisconnect().remove()
+      #     userPresenceRef.set true
+      #   else
+      #     alert "Disconnected!"
 
     else
       if window.cookies then window.cookies.clear()

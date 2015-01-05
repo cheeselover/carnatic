@@ -1,25 +1,24 @@
 <ion-view title="Register New Account">
-  <ion-content padding="true" scroll="false" id="login">
-    <div ng-show="user">
-      <h2>You're logged in!</h2>
-      <button class="button button-assertive" ng-click="logout()">Logout</button>
-    </div>
+  <ion-content class="padding" scroll="false" id="login-view">
+    <div class="card">
+      <div ng-hide="user">
+        <h2>SIGN IN TO YOUR ACCOUNT</h2>
+        <form ng-submit="loginWithEmail(data)">
+          <label class="item item-input">
+            <i class="icon ion-email placeholder-icon"></i>
+            <input type="text" placeholder="Email" ng-model="data.email">
+          </label><br>
+          <label class="item item-input">
+            <i class="icon ion-locked placeholder-icon"></i>
+            <input type="password" placeholder="Password" ng-model="data.password">
+          </label><br>
+          <button class="button button-royal" id="login-button" type="submit">SIGN IN</button>
+        </form><br>
+        <h4><a href="#/register">Don't have an account?</a></h4>
 
-    <div ng-hide="user">
-      <form ng-submit="loginWithEmail(data)">
-        <label class="item item-input">
-          <input type="text" placeholder="Email" ng-model="data.email">
-        </label>
-        <label class="item item-input">
-          <input type="password" placeholder="Password" ng-model="data.password">
-        </label>
-        <button class="button button-block button-balanced" type="submit">Login</button>
-      </form><br>
-
-      <h2>Alternatively, log in with...</h2><br>
-      <button class="button button-positive" ng-click="loginWithFacebook()">Facebook</button><br><br>
-      <button class="button button-energized" ng-click="loginWithGoogle()">Google</button><br><br>
-      <a href="#/register">Don't have an account?</a>
+        <button class="button button-block button-positive" ng-click="loginWithFacebook()">Sign in with Facebook</button>
+        <button class="button button-block button-assertive" ng-click="loginWithGoogle()">Sign in with Google</button><br><br>      
+      </div>
     </div>
   </ion-content>
 </ion-view>
