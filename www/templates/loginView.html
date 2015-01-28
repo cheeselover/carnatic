@@ -1,24 +1,45 @@
 <ion-view title="Register New Account">
-  <ion-content class="padding" scroll="false" id="login-view">
-    <div class="card">
-      <div ng-hide="user">
-        <h2>SIGN IN TO YOUR ACCOUNT</h2>
-        <form ng-submit="loginWithEmail(data)">
-          <label class="item item-input">
-            <i class="icon ion-email placeholder-icon"></i>
-            <input type="text" placeholder="Email" ng-model="data.email">
-          </label><br>
-          <label class="item item-input">
-            <i class="icon ion-locked placeholder-icon"></i>
-            <input type="password" placeholder="Password" ng-model="data.password">
-          </label><br>
-          <button class="button button-royal" id="login-button" type="submit">SIGN IN</button>
-        </form><br>
-        <h4><a href="#/register">Don't have an account?</a></h4>
-
-        <button class="button button-block button-positive" ng-click="loginWithFacebook()">Sign in with Facebook</button>
-        <button class="button button-block button-assertive" ng-click="loginWithGoogle()">Sign in with Google</button><br><br>      
+  <ion-content scroll="false" id="login">
+    <ion-pane id="login-background"></ion-pane>
+    <ion-pane id="login-content" class="padding">
+      <div class="title">
+        <h1>KORVAI</h1>
+        <p>Content management for carnatic music</p>
       </div>
-    </div>
+      <form ng-submit="loginWithEmail(data)">
+        <label class="item item-input">
+          <i class="icon ion-email placeholder-icon"></i>
+          <input type="email" placeholder="Email" ng-model="data.email">
+        </label><br><br>
+
+        <label class="item item-input">
+          <i class="icon ion-locked placeholder-icon"></i>
+          <input type="password" placeholder="Password" ng-model="data.password">
+        </label><br><br>
+
+        <button class="button button-outline button-energized" type="submit">SIGN IN</button>
+      </form><br><br>
+
+      <div class="row">
+        <div class="col"><hr></div>
+        <div class="col" id="or">OR</div>
+        <div class="col"><hr></div>
+      </div><br>
+
+      <h5>Sign in with Facebook or Google...</h5>
+
+      <div class="row">
+        <div class="col">
+          <button class="button button-block button-positive" ng-click="loginWithFacebook()">Facebook</button>
+        </div>
+        <div class="col">
+          <button class="button button-block button-assertive" ng-click="loginWithGoogle()">Google</button>
+        </div>
+      </div>
+
+      <footer>
+        <a href="#/register" class="button button-clear button-energized">Don't have an account?</a>
+      </footer>
+    </ion-pane>
   </ion-content>
 </ion-view>

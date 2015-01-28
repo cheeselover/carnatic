@@ -8,27 +8,27 @@ angular.module('carnatic.directives')
       thalam: '='
       mod: '='
       width: '@'
-      height: '@'
     link: (scope, element, attrs) ->
       width = scope.width
-      height = scope.height
+      changeInRadius = width / 10
+      translateAmount = (width / 2) - changeInRadius
       tau = 2 * Math.PI # http://tauday.com/tau-manifesto
 
       # An arc function with all values bound except the endAngle. So, to compute an
       # SVG path string for a given angle, we pass an object with an endAngle
       # property to the 'arc' function, and it will return the corresponding string.
       arc = d3.svg.arc()
-          .innerRadius(60)
-          .outerRadius(80)
+          .innerRadius(width / 4)
+          .outerRadius((width / 4) + changeInRadius)
           .startAngle(0)
 
       # Create the SVG container, and apply a transform such that the origin is the
       # center of the canvas. This way, we don't need to position arcs individually.
       svg = d3.select(element[0]).append("svg")
           .attr("width", width)
-          .attr("height", height)
+          .attr("height", width)
         .append("g")
-          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+          .attr("transform", "translate(" + translateAmount + "," + translateAmount + ")")
 
       # Add the background arc, from 0 to 100% (tau).
       background = svg.append("path")

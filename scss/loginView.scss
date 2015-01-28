@@ -1,0 +1,33 @@
+ion-content#login {
+  #login-background {
+    background-image: url('../img/mridangam_bg.jpg');
+    background-size: cover;
+    background-position: 50% 50%;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+  }
+
+  #login-content {
+    background: rgba(50, 50, 50, 0.35);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    text-align: center;
+
+    h1, h5, input, #or { 
+      color: white;
+    }
+
+    .title {
+      p { color: $grey; }
+      h1 { font-family: 'Orbitron', sans-serif; }
+    }
+
+    .item-input {
+      background-color: rgba(255, 255, 255, 0);
+      border: 0;
+
+      input { 
+        border-bottom: 1px solid white;
+      }
+    }
+  }
+}

@@ -1,20 +1,8 @@
-<ion-view title="Compose">
+<ion-view title="Compose" id="compose-view">
   <ion-content class="padding">
     <div contenteditable quotation-replace class="padding" ng-model="korvai.content"></div>
-    <button class="button button-block button-assertive" ng-click="countMatras(korvai.content)">Count matras</button>
-    <button class="button button-block button-positive" ng-click="createKorvai(korvai)">UPLOAD</button>
-
-    <h1>Number of matras: {{ matras || 0 }}</h1>
 
     <div class="row">
-      <div class="col">
-        <arc-tween 
-          width=160 height=160 val="matras"
-          thalam="korvai.thalam" mod="korvai.mod"
-          style="-webkit-transform: translateZ(0);">
-        </arc-tween>
-      </div>
-
       <div class="col">
         <div class="list">
           <label class="item item-radio">
@@ -93,4 +81,29 @@
       </div>
     </div>
   </ion-content>
+
+  <ion-footer-bar class="bar-assertive" id="compose-footer">
+    <div class="row">
+      <div class="col">
+        <arc-tween 
+          width=90 val="matras"
+          thalam="korvai.thalam" mod="korvai.mod"
+          style="-webkit-transform: translateZ(0);">
+        </arc-tween>
+      </div>
+      <div class="col col-67">
+        <p>Number of matras: {{ matras || 0 }}</p>
+        <button 
+        class="button button-block button-royal" 
+        ng-click="countMatras(korvai.content)">
+          Count matras
+        </button>
+        <button 
+        class="button button-block button-calm" 
+        ng-click="createKorvai(korvai)">
+          UPLOAD
+        </button>
+      </div>
+    </div>
+  </ion-footer-bar>
 </ion-view>
