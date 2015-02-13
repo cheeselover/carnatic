@@ -1,38 +1,77 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus enable-menu-with-back-views="true" id="sidemenu">
   <ion-side-menu-content>
-    <ion-nav-bar class="bar-dark">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-
+    <ion-nav-bar class="bar-assertive">
       <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
       </ion-nav-buttons>
+
       <ion-nav-buttons side="right">
-        <button class="button button-assertive" ng-click="$root.logout()">Logout</button>
+        <button class="button button-icon button-clear ion-information-circled" menu-toggle="right"></button>
       </ion-nav-buttons>
     </ion-nav-bar>
+
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
   <ion-side-menu side="left">
-    <ion-header-bar class="bar-dark">
-      <h1 class="title">Korvai App</h1>
-    </ion-header-bar>
-    <ion-content>
+    <ion-content scroll="false" id="left-menu" ng-controller="LeftMenuCtrl">
+      <div id="profile-info">
+        <div class="row">
+          <div class="col">
+            <h1>4</h1>
+            <p>Korvais shared</p>
+          </div>
+          <div class="col">
+            <img ng-src="{{ userProfile.picture }}" id="circle-dp" />
+            <p>{{ userProfile.name }}</p>
+          </div>
+          <div class="col">
+            <h1>750</h1>
+            <p>Reputation</p>
+          </div>
+        </div>
+      </div>
       <ion-list>
         <ion-item nav-clear menu-close href="#/app/compose">
-          Compose
+          <div class="row">
+            <div class="col col-33"><i class="icon ion-compose"></i></div>
+            <div class="col col-67">Compose</div>
+          </div>
         </ion-item>
         <ion-item nav-clear menu-close href="#/app/korvais">
-          Browse Korvais
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/account">
-          Account
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/search">
-          Search Users
+          <div class="row">
+            <div class="col col-33"><i class="icon ion-grid"></i></div>
+            <div class="col col-67">Browse Korvais</div>
+          </div>
         </ion-item>
       </ion-list>
+      <button class="button button-block button-outline button-assertive" ng-click="$root.logout()">Logout</button>
+    </ion-content>
+  </ion-side-menu>
+
+  <ion-side-menu side="right">
+    <ion-content id="right-menu" ng-controller="RightMenuCtrl">
+      <div class="card padding">
+        <h2>Thalam</h2><hr>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Thalam
+          </div>
+          <select ng-model="selectedThalam" ng-options="thalam.name for thalam in thalams"></select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Mod
+          </div>
+          <select ng-model="selectedMod" ng-options="mod.name for mod in mods"></select>
+        </label>
+      </div>
+      <div class="card padding">
+        <h1>HEY</h1>
+      </div>
+      <div class="card padding">
+        <h1>HEY</h1>
+      </div>
     </ion-content>
   </ion-side-menu>
 </ion-side-menus>

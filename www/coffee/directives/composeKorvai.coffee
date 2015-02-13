@@ -1,6 +1,6 @@
 angular.module('carnatic.directives')
 
-.directive 'quotationReplace', ($document) ->
+.directive 'composeKorvai', ($document) ->
   findKorvaiWords = (formattedKorvai) ->
     return formattedKorvai.match(/([a-zA-Z]+)/g).removeDuplicates().filter (word) ->
       word.length > 2
@@ -13,6 +13,12 @@ angular.module('carnatic.directives')
           if e.keyCode is 13
             document.execCommand('insertHTML', false, '<br><br>')
             return false
+
+        # Live information updating
+        timer = null
+        $(element[0]).keyup ->
+          clearTimeout(timer)
+          timer = setTimeout(scope.updateMatras, 1000)
 
         notesData = findKorvaiWords(element[0].textContent)
         notesData = $.map notesData, (value, i) -> 

@@ -46,20 +46,12 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+@import "sidemenu.scss";
 @import "loginView.scss";
-
-#korvai-view {
-  font-family: "Crimson Text", serif;
-  font-size: 16pt;
-  line-height: 130%;
-
-  span.modifier-bracket {
-    font-family: arial;
-    font-weight: 100;
-    font-size: 20pt;
-  }
-}
+@import "composeView.scss";
+@import "korvaisView.scss";
+@import "korvaiDetailView.scss";
 
 div[contenteditable] {
-  border: 1px solid;
+  border: 1px solid $turquoise;
 }

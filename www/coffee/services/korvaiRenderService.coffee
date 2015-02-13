@@ -43,7 +43,15 @@ angular.module('carnatic.services')
         when 8 then "mael chatusram"
         when 9 then "sankeernam"
 
+    grabContent: (content) ->
+      content = content.replaceAll "<br>", "\n"
+      div = document.createElement("div")
+      div.innerHTML = content
+      content = div.textContent or div.innerText or ""
+
     korvaiToHTML: (korvai) ->
+      if korvai is "" or korvai is null then return ""
+      
       korvai = korvai.replaceAll(",", " , ").replaceAll(";", " ; ").replaceAll("\n", " \n ")
       korvaiWords = korvai.match(/([a-zA-Z]+)/g).removeDuplicates()
 

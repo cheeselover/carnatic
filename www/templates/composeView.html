@@ -1,108 +1,27 @@
 <ion-view title="Compose" id="compose-view">
   <ion-content class="padding">
-    <div contenteditable quotation-replace class="padding" ng-model="korvai.content"></div>
-
-    <div class="row">
-      <div class="col">
-        <div class="list">
-          <label class="item item-radio">
-            <input type="radio" name="thalam" value="32" ng-model="korvai.thalam">
-            <div class="item-content">Adi</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="thalam" value="12" ng-model="korvai.thalam">
-            <div class="item-content">Rupaka</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="thalam" value="14" ng-model="korvai.thalam">
-            <div class="item-content">Misra Chapu</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="thalam" value="10" ng-model="korvai.thalam">
-            <div class="item-content">Kanda Chapu</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="list">
-          <label class="item item-radio">
-            <input type="radio" name="mod" value="0" ng-model="korvai.mod">
-            <div class="item-content">None</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="mod" value="2" ng-model="korvai.mod">
-            <div class="item-content">2 matras before</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="mod" value="4" ng-model="korvai.mod">
-            <div class="item-content">4 matras before</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="mod" value="6" ng-model="korvai.mod">
-            <div class="item-content">6 matras before</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-        </div>
-      </div>
-
-      <div class="col">
-          <label class="item item-radio">
-            <input type="radio" name="mod" value="-2" ng-model="korvai.mod">
-            <div class="item-content">2 matras after</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="mod" value="-4" ng-model="korvai.mod">
-            <div class="item-content">4 matras after</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-
-          <label class="item item-radio">
-            <input type="radio" name="mod" value="-6" ng-model="korvai.mod">
-            <div class="item-content">6 matras after</div>
-            <i class="radio-icon ion-checkmark"></i>
-          </label>
-        </div>
-      </div>
-    </div>
+    <div compose-korvai contenteditable class="padding" ng-model="korvai.content"></div><br>
+    <div id="korvai-preview" class="padding" ng-bind-html="korvaiPreview"></div>
   </ion-content>
 
-  <ion-footer-bar class="bar-assertive" id="compose-footer">
+  <ion-footer-bar class="bar-stable" id="compose-footer">
     <div class="row">
-      <div class="col">
+      <div class="col-50">
         <arc-tween 
-          width=90 val="matras"
+          val="totalMatras"
           thalam="korvai.thalam" mod="korvai.mod"
           style="-webkit-transform: translateZ(0);">
         </arc-tween>
       </div>
-      <div class="col col-67">
-        <p>Number of matras: {{ matras || 0 }}</p>
-        <button 
-        class="button button-block button-royal" 
-        ng-click="countMatras(korvai.content)">
-          Count matras
-        </button>
-        <button 
-        class="button button-block button-calm" 
-        ng-click="createKorvai(korvai)">
-          UPLOAD
-        </button>
+      <div class="col-50">
+        <span class="large-number">{{ avarthanams }}</span>
+        <span class="small-text">Avarthanams</span><br>
+
+        <span class="large-number">{{ beats }}</span>
+        <span class="small-text">Beats</span><br>
+
+        <span class="large-number">{{ matras }}</span>
+        <span class="small-text">Matras</span>
       </div>
     </div>
   </ion-footer-bar>

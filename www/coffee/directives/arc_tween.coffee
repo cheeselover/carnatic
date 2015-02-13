@@ -7,9 +7,8 @@ angular.module('carnatic.directives')
       val: '='
       thalam: '='
       mod: '='
-      width: '@'
     link: (scope, element, attrs) ->
-      width = scope.width
+      width = $(element[0]).parent().height() + 40;
       changeInRadius = width / 10
       translateAmount = (width / 2) - changeInRadius
       tau = 2 * Math.PI # http://tauday.com/tau-manifesto

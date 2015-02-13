@@ -1,0 +1,21 @@
+ion-side-menus#sidemenu {
+  #left-menu {
+    .col-33 i { font-size: 24px; }
+
+    #profile-info {
+      background-color: $dark;
+
+      h1, p { color: white; }
+
+      #circle-dp {
+        height: 100px;
+        width: 100px;
+        border-radius: 50px;
+      }
+    }
+  }
+
+  #right-menu {
+    background-color: $dark;
+  }
+}

@@ -1,6 +1,6 @@
 angular.module('carnatic.services')
 
-.factory "Auth", ($firebaseAuth, User, REF) ->
+.factory "Auth", ($firebaseAuth, $rootScope, User, REF) ->
   authRef = $firebaseAuth REF
   usersRef = REF.child 'users'
 

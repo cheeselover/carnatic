@@ -1,0 +1,51 @@
+ion-content#korvais {
+  ion-item {
+    .ribbon-wrapper-green {
+      width: 85px;
+      height: 88px;
+      overflow: hidden;
+      position: absolute;
+      top: -3px;
+      right: -3px;
+    }
+
+    .ribbon-green {
+      text-align: center;
+      transform: rotate(45deg);
+      position: relative;
+      padding: 7px 0;
+      left: -5px;
+      top: 15px;
+      width: 120px;
+      background-color: #BFDC7A;
+      color: $dark;
+      box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+    }
+
+    .ribbon-green:before, .ribbon-green:after {
+      content: "";
+      border-top:   3px solid #6e8900;   
+      border-left:  3px solid transparent;
+      border-right: 3px solid transparent;
+      position:absolute;
+      bottom: -3px;
+    }
+
+    .ribbon-green:before {
+      left: 0;
+    }
+
+    .ribbon-green:after {
+      right: 0;
+    }
+
+    h2 { font-size: 4.5vw; }
+
+    .col {
+      text-align: center;
+      border-left: 1px solid; 
+      border-right: 1px solid; 
+      h3 { font-size: 5vw; }
+    }
+  }
+}
